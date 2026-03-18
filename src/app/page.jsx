@@ -97,7 +97,7 @@ mediaItems: [
   category: 'Concept Development / Design',
   description: `Big in Restaurants was one of Square’s largest OOH activations, debuting at the Las Vegas Bar and Restaurant Expo. Spanning 400+ digital placements across the airport, Las Vegas Strip, and convention center, the campaign was designed to cut through the visual noise of Vegas while proving Square is built for restaurants.
 
-The work stemmed from my winning concept, Restaurant Essentials—pairing ubiquitous restaurant objects with Square hardware. The campaign’s success led to its expansion into Chicago’s NRA..
+The work stemmed from my winning concept, Restaurant Essentials—pairing ubiquitous restaurant objects with Square hardware. The campaign’s success led to its expansion into Chicago’s NRA.
  
 (WIP → more to come)
   `, 
