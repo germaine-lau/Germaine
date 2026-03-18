@@ -30,7 +30,7 @@ mediaItems: [
   { type: 'image', src: '/images/Spread_Lotus_2.png'},
   { type: 'image', src: '/images/Spread_Grid.png'},
   { type: 'image', src: '/images/Spread_Ggiata.png'},
-  { type: 'image', src: '/images/zine_animation.gif'},
+  { type: 'image', src: '/images/Zine_Animation.gif'},
   { type: 'image', src: '/images/Booth_01.png'},
   { type: 'image', src: '/images/Booth_02.png'},
   { type: 'image', src: '/images/Test_Brochure.png'},
