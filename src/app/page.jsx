@@ -13,7 +13,9 @@ const HOMEPAGE_PROJECTS = [
   {
     title: '857-POS-PROS',
     category: 'Experiential / Print',
-    description:`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`, 
+    description:`For Las Vegas' 2026 Bar and Restaurant Expo, we took a bolder approach. We borrowed from the clarity (and absurdity) of lawyer ads to call out real restaurant pain points: hidden fees, outdated tech, and shrinking margins. No soft language. Just a bold, no-frills system with a direct message: Call Square.
+
+The system carried through to a tradeshow booth and printed materials designed to stand apart from typical POS marketing, saying exactly what we mean without burying it.`, 
 credits: `Creative Direction
 Sean Conroy, Christian Wildic
 
@@ -93,9 +95,11 @@ mediaItems: [
 {
   title: 'Big in Restaurants',
   category: 'Concept Development / Design',
-  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  
- (WIP → more to come)
+  description: `Big in Restaurants was one of Square’s largest OOH activations, debuting at the Las Vegas Bar and Restaurant Expo. Spanning 400+ digital placements across the airport, Las Vegas Strip, and convention center, the campaign was designed to cut through the visual noise of Vegas while proving Square is built for restaurants.
+
+The work stemmed from my winning concept, Restaurant Essentials—pairing ubiquitous restaurant objects with Square hardware. The campaign’s success led to its expansion into Chicago’s NRA..
+ 
+(WIP → more to come)
   `, 
   credits: `Creative Direction
 Monina Velarde, Dave Brown, Sean Conroy, Shawna Wagman
@@ -118,14 +122,15 @@ Brett Baker, Jenn Young`,
       previewMode: true,
       loop: true
     },
+    { type: 'image', src: '/images/1782662.jpg'},
   ],
 },
   
   {
     title: 'See you in the neighborhood',
     category: 'Campaign Design',
-    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  
+    description: `Square’s See You in the Neighborhood campaign introduced a refreshed brand identity and new tagline through a national rollout. From digital billboards and wildpostings to car wraps and print, the campaign showed up across NYC, San Francisco, Chicago, Seattle, Houston, and Fort Worth. 
+   
     (WIP → more to come)
      `, 
        credits: `Creative Direction
@@ -146,6 +151,7 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
       { type: 'image', src: '/images/Wildpostings_01.jpeg'},
       { type: 'image', src: '/images/Wildpostings_02.jpeg'},
       { type: 'image', src: '/images/1846344.jpg'},
+      { type: 'image', src: '/images/1846340.png'},
   
     ],
   },
@@ -185,7 +191,7 @@ Ian Watt, BANG!`,
   },
 
   {
-    title: 'Web Stuff',
+    title: 'The Internet',
     category: 'Web Design / Social / Digital Ads',
     description:
      `A selection of digital work spanning social content and interactive web design, including series Running a Restaurant is No Joke with comedian and actor Eric Wareheim and Only the Good Stuff with singer and songwriter Kelis.
