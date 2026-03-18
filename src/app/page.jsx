@@ -122,7 +122,6 @@ Brett Baker, Jenn Young`,
       previewMode: true,
       loop: true
     },
-    { type: 'image', src: '/images/1782662.jpg'},
   ],
 },
   
