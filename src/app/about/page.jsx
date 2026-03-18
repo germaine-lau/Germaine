@@ -52,7 +52,7 @@ export default function HomePage() {
       }
       heroImage={
         <HeroImage
-          src="https://www.figma.com/api/mcp/asset/5ddd00f7-fca0-42e0-9197-12b7c8412ee2"
+          src="/images/WebProfile.png"
           alt="Portrait"
         />
       }
