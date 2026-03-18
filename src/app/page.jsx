@@ -33,8 +33,8 @@ mediaItems: [
   { type: 'image', src: '/images/Zine_Animation.gif'},
   { type: 'image', src: '/images/Booth_01.png'},
   { type: 'image', src: '/images/Booth_02.png'},
-  { type: 'image', src: '/images/Test_Brochure.png'},
-  { type: 'image', src: '/images/Brochure_02.png'},
+  { type: 'image', src: '/images/Brochure_Front.png'},
+  { type: 'image', src: '/images/Brochure_Inside.png'},
   { type: 'image', src: '/images/PosPros_Billboard.png'},
  
 ],
@@ -114,7 +114,7 @@ Brett Baker, Jenn Young`,
   mediaItems: [
     {
       type: 'video',
-      src: '/videos/Vegas_edit.mov',
+      src: '/videos/Vegas_Trimmed.mp4',
       previewMode: true,
       loop: true
     },
@@ -173,7 +173,7 @@ Ian Watt, BANG!`,
     mediaItems: [
       {
         type: "video",
-        src: "/videos/broadstreetxsquare_sm.mp4",
+        src: "/videos/Lobster_sm_v2.mp4",
         aspectRatio: "5 / 4"
       },
       {
@@ -188,7 +188,7 @@ Ian Watt, BANG!`,
     title: 'Web Stuff',
     category: 'Web Design / Social / Digital Ads',
     description:
-     `A selection of digital work spanning campaign social content and interactive web design, including No Joke with comedian and actor Eric Wareheim and Only the Good Stuff with singer and songwriter Kelis.
+     `A selection of digital work spanning social content and interactive web design, including series Running a Restaurant is No Joke with comedian and actor Eric Wareheim and Only the Good Stuff with singer and songwriter Kelis.
 
 Additional interactive work available upon request.`,
       credits: `Creative Direction
