@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+}
+
+body {
+  cursor: url("/smiley-cursor.svg") 16 16, auto;
+  -webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+a:hover,
+button:hover {
+  cursor: url("/smiley-hover.svg") 16 16, pointer;
+}
+
+/* Hide scrollbar but keep scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE + Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+
+.font-weird-serif {
+  font-family: var(--font-weird-serif), serif;
+}
+
+
+.font-arial {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+.video-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 9999px;
+}
+
+.video-slider::-webkit-slider-runnable-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 9999px;
+}
+
+.video-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
+  border-radius: 9999px;
+  background: white;
+  border: none;
+}
+
+.video-slider::-moz-range-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 9999px;
+}
+
+.video-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: white;
+  border: none;
+}
