@@ -47,10 +47,12 @@ mediaItems: [
   {
     title: 'Katz\'s x Square',
     category: 'Concept Development / Design',
-    description: `Behind every legendary sandwich at Katz's Deli is a legendary team. That dedication, that teamwork, that pride isn't just making a living. It's building a community that's been going strong for more than 100 years.
+    description: `Katz’s isn’t just known for its sandwiches. It’s a neighborhood icon. 
 
-The campaign system was built around my winning "Time" concept, celebrating Katz's and Square's balance of tradition and modernity. The campaign stretched from the Lower East Side to Delancey Station and Times Square, turning a neighborhood legacy into a citywide story.
-`, 
+I developed the winning “Time” concept, using Katz’s legacy as a lens to connect Square to the neighborhood—pairing tradition with modernity in a way that reflects both brands.
+
+The campaign nods to to the things that will always change at Katz’s while celebrating the things that never will, positioning Square as part of that ongoing story. Spanning the Lower East Side to Delancey Station and Times Square, the work brought a neighborhood icon into a citywide presence. `, 
+
     credits: `Creative Direction: Sean Conroy
 Design: Germaine Lau, Brandon Murray, Northy Chen
 Copy: Jonathan Skale
