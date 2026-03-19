@@ -13,9 +13,11 @@ const HOMEPAGE_PROJECTS = [
   {
     title: '857-POS-PROS',
     category: 'Experiential / Print',
-    description:`For Las Vegas' 2026 Bar and Restaurant Expo, we took a bolder approach. We borrowed from the clarity (and absurdity) of lawyer ads to call out real restaurant pain points: hidden fees, outdated tech, and shrinking margins. No soft language. Just a bold, no-frills system with a direct message: Call Square.
+    description:`Most POS marketing blends into a sea of sameness, with soft promises and generic claims. At the Bar and Restaurant Expo, we took a more direct approach. Using the blunt clarity (and slight absurdity) of lawyer ads, we called out real operator pain points with a clear directive: Call Square.
 
-The system carried through to a tradeshow booth and printed materials designed to stand apart from typical POS marketing, saying exactly what we mean without burying it.`, 
+I led a rethinking of the booth collateral, breaking from typical POS conventions to create materials that made product features and seller stories engaging—something operators would actually want to pick up and spend time with.
+
+The result was a tradeshow experience that stood out visually and made Square’s value immediately clear, saying exactly what we mean without burying it.`, 
 credits: `Creative Direction
 Sean Conroy, Christian Wildic
 
