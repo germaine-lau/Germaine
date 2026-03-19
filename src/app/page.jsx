@@ -99,11 +99,11 @@ mediaItems: [
 {
   title: 'Big in Restaurants',
   category: 'Concept Development / Design',
-  description: `Big in Restaurants was one of Square’s largest OOH activations, debuting at the Las Vegas Bar and Restaurant Expo. Spanning 400+ digital placements across the airport, Las Vegas Strip, and convention center, the campaign was designed to cut through the visual noise of Vegas while proving Square is built for restaurants.
+  description: `Square launched one of its largest OOH activations in Las Vegas. Spanning 400+ placements across the city, the campaign was designed to cut through the city’s visual noise while reinforcing Square’s role in restaurant operations.
 
-The work stemmed from my winning concept, Restaurant Essentials—pairing ubiquitous restaurant objects with Square hardware. The campaign’s success led to its expansion into Chicago’s NRA.
- 
-(WIP → more to come)
+I developed the winning “Restaurant Essentials” concept for high-profile placements at Caesars Palace and Resorts World. Pairing everyday restaurant objects with Square hardware, the work framed Square as a restaurant essential—on par with kitchen labeling tape.
+
+The campaign later expanded into Chicago’s National Restaurant Association to reach the industry’s largest gatherings of operators.
   `, 
   credits: `Creative Direction
 Monina Velarde, Dave Brown, Sean Conroy, Shawna Wagman
