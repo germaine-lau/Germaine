@@ -11,11 +11,20 @@
 body {
   cursor: url("/smiley-cursor.svg") 16 16, auto;
   -webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a:hover,
 button:hover {
+  cursor: url("/smiley-hover.svg") 16 16, pointer;
+}
+
+video {
+  cursor: url("/smiley-hover.svg") 16 16, pointer;
+}
+
+.media-item,
+.media-item * {
   cursor: url("/smiley-hover.svg") 16 16, pointer;
 }
 

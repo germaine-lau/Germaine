@@ -485,30 +485,31 @@ function ProjectRow({
         {item?.src ? (
           isVideo ? (
             <div
-              className="group relative h-full w-full bg-black"
-              data-no-drag="true"
-              onClick={() => {
-                if (!isPreviewVideo) {
-                  handleVideoPrimaryClick(videoKey);
-                }
-              }}
-            >
-              <video
-                key={videoKey}
-                ref={(el) => {
-                  if (el) videoRefs.current[videoKey] = el;
-                }}
-                src={item.src}
-                aria-label={item.alt ?? ''}
-                muted={isPreviewVideo ? true : isMuted}
-                playsInline
-                autoPlay
-                loop={isPreviewVideo ? true : !hasInteracted}
-                preload="metadata"
-                controls={false}
-                className={`${
-                  isPreviewVideo ? 'pointer-events-none ' : ''
-                }block h-full w-full object-cover`}
+            className="group relative h-full w-full"
+            data-no-drag="true"
+            onClick={() => {
+              if (!isPreviewVideo) {
+                handleVideoPrimaryClick(videoKey);
+              }
+            }}
+          >
+              <div className="media-item h-full w-full">
+    <video
+      key={videoKey}
+      ref={(el) => {
+        if (el) videoRefs.current[videoKey] = el;
+      }}
+      src={item.src}
+      aria-label={item.alt ?? ''}
+      muted={isPreviewVideo ? true : isMuted}
+      playsInline
+      autoPlay
+      loop={isPreviewVideo ? true : !hasInteracted}
+      preload="metadata"
+      controls={false}
+      className={`${
+        isPreviewVideo ? 'pointer-events-none ' : ''
+      }block h-full w-full object-cover`}
                 onLoadedMetadata={(e) => {
                   if (isPreviewVideo) {
                     e.currentTarget.muted = true;
@@ -546,6 +547,7 @@ function ProjectRow({
                   }
                 }}
               />
+              </div>
 
               {!isPreviewVideo && (
                 <>

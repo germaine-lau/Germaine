@@ -46,7 +46,7 @@ mediaItems: [
     category: 'Concept / Art Direction',
     description: `Katz’s isn’t just known for its sandwiches. It’s a neighborhood icon. I developed the winning “Time” concept, using Katz’s legacy as a lens to connect Square to the neighborhood—pairing tradition with modernity in a way that reflects both brands.
 
-The campaign nods to to the things that will always change at Katz’s while celebrating the things that never will and positioning Square as part of that ongoing story. Spanning the Lower East Side to Delancey Station and Times Square, the work brought a neighborhood icon into a citywide presence. `, 
+The campaign nods to to the things that will always change at Katz’s while celebrating the things that never will, and it positions Square as part of that ongoing story. Spanning the Lower East Side to Delancey Station and Times Square, the work brought a neighborhood icon into a citywide presence. `, 
 
     credits: `Creative Direction: Sean Conroy
 Design: Germaine Lau, Brandon Murray, Northy Chen
@@ -91,7 +91,7 @@ mediaItems: [
 {
   title: 'Big in Restaurants',
   category: 'Concept / Art Direction',
-  description: `Square launched one of its largest OOH activations in Las Vegas. Spanning 400+ placements, the campaign cut through the city’s visual noise while reinforcing Square’s role in restaurants.
+  description: `Square launched one of its largest OOH activations in Las Vegas. With 400+ placements throughout the city, the campaign cut through the city’s visual noise while reinforcing Square’s role in restaurants.
 
 I developed the winning “Restaurant Essentials” concept for high-profile placements at Caesars Palace and Resorts World. Pairing everyday restaurant objects with Square hardware, the work framed Square as a restaurant essential—on par with kitchen labeling tape.
 
