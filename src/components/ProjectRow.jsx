@@ -510,14 +510,16 @@ function ProjectRow({
         if (el) videoRefs.current[videoKey] = el;
       }}
       src={item.src}
-      aria-label={item.alt ?? ''}
-      muted={isPreviewVideo ? true : isMuted}
-      playsInline
-      autoPlay
-      loop={isPreviewVideo ? true : !hasInteracted}
-      preload="metadata"
-      controls={false}
-     className="block h-full w-full object-cover"
+  aria-label={item.alt ?? ''}
+  muted
+  defaultMuted
+  playsInline
+  autoPlay
+  loop={isPreviewVideo ? true : !hasInteracted}
+  preload="metadata"
+  controls={false}
+  poster=""
+  className="block h-full w-full object-cover"
                 onLoadedMetadata={(e) => {
                   if (isPreviewVideo) {
                     e.currentTarget.muted = true;
