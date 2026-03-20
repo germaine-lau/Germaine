@@ -13,7 +13,7 @@ const HOMEPAGE_PROJECTS = [
   {
     title: '857-POS-PROS',
     category: 'Experiential / Print',
-    description:`Most POS marketing blends into a sea of sameness with soft promises and generic claims. At the Bar and Restaurant Expo, we took a more direct approach. Using the blunt clarity (and slight absurdity) of lawyer ads, we called out real operator pain points with a clear directive: Call Square.
+    description:`Most POS marketing blend together with soft promises and generic claims. At the Bar and Restaurant Expo, we took a more direct approach. Using the blunt clarity (and slight absurdity) of lawyer ads, we called out real operator pain points with a clear directive: Call Square.
 
 I led a rethinking of the booth collateral, breaking from typical POS conventions to create materials that made product features and seller stories engaging—something operators would actually want to pick up and spend time with.
 
