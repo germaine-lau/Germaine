@@ -30,9 +30,9 @@ const DEFAULT_EXPERIENCE = [
   },
 ];
 
-const DEFAULT_INTRO = `I’m Germaine, a multidisciplinary designer based in San Francisco. I stretch brands in ways that feel human, expressive, and a little unexpected—without losing what makes them recognizable.
+const DEFAULT_INTRO = `I’m Germaine, a multidisciplinary designer based in San Francisco. I believe in elevating brands in ways that feel human, expressive, and a little unexpected—without losing what makes them recognizable.
 
-Over the last six years as a Senior Designer on the Square / Block creative team, I’ve worked across campaigns, product launches, web, motion, and video. My work spans both digital and physical spaces, from multi-city OOH to the pillows you sat on at an event.
+Over the last six years as a Senior Designer on the Square / Block creative team, I’ve worked across campaigns, product launches, web, motion, and video. My work spans both digital and physical spaces, from multi-city OOH to the pillows you sat on at an event. 
 
 Here’s a peek into how I work: I believe creativity is a team effort (I’ll bounce an idea off you, you can do the same to me), my sharpest thinking usually starts with an afternoon of heads-down time, and I treat every project as an opportunity to show up and push the work further.
 

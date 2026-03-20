@@ -488,9 +488,19 @@ function ProjectRow({
             className="group relative h-full w-full"
             data-no-drag="true"
             onClick={() => {
-              if (!isPreviewVideo) {
-                handleVideoPrimaryClick(videoKey);
+              const video = videoRefs.current[videoKey];
+              if (!video) return;
+            
+              if (isPreviewVideo) {
+                const video = e.currentTarget;
+                video.muted = true;
+                video.defaultMuted = true;
+                video.playsInline = true;
+                video.play().catch(() => {});
+                return;
               }
+            
+              handleVideoPrimaryClick(videoKey);
             }}
           >
               <div className="media-item h-full w-full">
@@ -507,9 +517,7 @@ function ProjectRow({
       loop={isPreviewVideo ? true : !hasInteracted}
       preload="metadata"
       controls={false}
-      className={`${
-        isPreviewVideo ? 'pointer-events-none ' : ''
-      }block h-full w-full object-cover`}
+     className="block h-full w-full object-cover"
                 onLoadedMetadata={(e) => {
                   if (isPreviewVideo) {
                     e.currentTarget.muted = true;
