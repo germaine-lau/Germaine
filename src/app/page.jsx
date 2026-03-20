@@ -13,7 +13,7 @@ const HOMEPAGE_PROJECTS = [
   {
     title: '857-POS-PROS',
     category: 'Experiential / Print',
-    description:`Most POS marketing blends into a sea of sameness, with soft promises and generic claims. At the Bar and Restaurant Expo, we took a more direct approach. Using the blunt clarity (and slight absurdity) of lawyer ads, we called out real operator pain points with a clear directive: Call Square.
+    description:`Most POS marketing blends into a sea of sameness with soft promises and generic claims. At the Bar and Restaurant Expo, we took a more direct approach. Using the blunt clarity (and slight absurdity) of lawyer ads, we called out real operator pain points with a clear directive: Call Square.
 
 I led a rethinking of the booth collateral, breaking from typical POS conventions to create materials that made product features and seller stories engaging—something operators would actually want to pick up and spend time with.
 
@@ -25,10 +25,7 @@ Design
 Germaine Lau, Emanual Ilagan, John Bermingham 
 
 Copy
-Michael Grover
-
-Program Manager
-Bridget Dodd`,
+Michael Grover`,
 mediaItems: [
   { type: 'image', src: '/images/PosPros_Cover_LowRes.png'},
   { type: 'image', src: '/images/Spread_Lotus_2.png'},
@@ -46,12 +43,10 @@ mediaItems: [
 
   {
     title: 'Katz\'s x Square',
-    category: 'Concept Development / Design',
-    description: `Katz’s isn’t just known for its sandwiches. It’s a neighborhood icon. 
+    category: 'Concept / Art Direction',
+    description: `Katz’s isn’t just known for its sandwiches. It’s a neighborhood icon. I developed the winning “Time” concept, using Katz’s legacy as a lens to connect Square to the neighborhood—pairing tradition with modernity in a way that reflects both brands.
 
-I developed the winning “Time” concept, using Katz’s legacy as a lens to connect Square to the neighborhood—pairing tradition with modernity in a way that reflects both brands.
-
-The campaign nods to to the things that will always change at Katz’s while celebrating the things that never will, positioning Square as part of that ongoing story. Spanning the Lower East Side to Delancey Station and Times Square, the work brought a neighborhood icon into a citywide presence. `, 
+The campaign nods to to the things that will always change at Katz’s while celebrating the things that never will and positioning Square as part of that ongoing story. Spanning the Lower East Side to Delancey Station and Times Square, the work brought a neighborhood icon into a citywide presence. `, 
 
     credits: `Creative Direction: Sean Conroy
 Design: Germaine Lau, Brandon Murray, Northy Chen
@@ -65,9 +60,6 @@ Germaine Lau, Brandon Murray, Northy Chen
 
 Copy
 Jonathan Skale
-
-Program Manager
-Nicholas Dahl
 
 Production
 Jennifer Bonilla, Terumi Fletcher`,
@@ -98,13 +90,12 @@ mediaItems: [
 
 {
   title: 'Big in Restaurants',
-  category: 'Concept Development / Design',
-  description: `Square launched one of its largest OOH activations in Las Vegas. Spanning 400+ placements across the city, the campaign was designed to cut through the city’s visual noise while reinforcing Square’s role in restaurant operations.
+  category: 'Concept / Art Direction',
+  description: `Square launched one of its largest OOH activations in Las Vegas. Spanning 400+ placements, the campaign cut through the city’s visual noise while reinforcing Square’s role in restaurants.
 
 I developed the winning “Restaurant Essentials” concept for high-profile placements at Caesars Palace and Resorts World. Pairing everyday restaurant objects with Square hardware, the work framed Square as a restaurant essential—on par with kitchen labeling tape.
 
-The campaign later expanded into Chicago’s National Restaurant Association to reach the industry’s largest gatherings of operators.
-  `, 
+The campaign later expanded into Chicago’s National Restaurant Association to reach the industry’s largest gatherings of operators.`, 
   credits: `Creative Direction
 Monina Velarde, Dave Brown, Sean Conroy, Shawna Wagman
 
@@ -113,9 +104,6 @@ Germaine Lau, Grace Heitmann
 
 Motion
 Steven Dupre
-
-Program Manager
-Bridget Dodd
 
 Copy
 Brett Baker, Jenn Young`,
@@ -131,11 +119,10 @@ Brett Baker, Jenn Young`,
   
   {
     title: 'See you in the neighborhood',
-    category: 'Campaign Design',
-    description: `Square’s See You in the Neighborhood campaign introduced a refreshed brand identity and new tagline through a national rollout. From digital billboards and wildpostings to car wraps and print, the campaign showed up across NYC, San Francisco, Chicago, Seattle, Houston, and Fort Worth. 
-   
-    (WIP → more to come)
-     `, 
+    category: 'Art Direction',
+    description: `Square’s See You in the Neighborhood campaign introduced a refreshed brand identity and tagline through a national rollout spanning 300+ OOH assets across eight major cities.
+
+I led the design and animation of all digital and high-impact print across the campaign. The system was localized to each city, featuring real businesses to position Square as a fixture in the neighborhood.`, 
        credits: `Creative Direction
 Sean Conroy, Said Fayad
 
@@ -144,9 +131,6 @@ Germaine Lau, Brandon Murray
 
 Copy
 Jonathan Skale
-
-Program Manager
-Nicholas Dahl
 
 Production
 Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
@@ -160,11 +144,11 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
   },
   {
     title: 'Broad Street Oyster x Square',
-    category: 'Concept Development / Case Study',
+    category: 'Concept / Art Direction',
     description:
-     `Restaurant testimonial videos tend to follow the same formula: seated interview over restaurant b-roll. But operators don’t spend their day talking about their POS. They spend it running their restaurant.
+     `Restaurant testimonials often follow a familiar formula: seated interviews over b-roll. But operators don’t spend their day talking about their POS. They spend it running their restaurant.
 
-To challenge the perception that Square isn’t built for restaurants, we built the story around a live service. We followed owner Christopher Tompkins on-the-go, shucking oysters, and naturally using Square.
+To challenge the perception that Square isn’t built for restaurants, we built the story around a live service. I shaped the approach to keep owner Christopher Tompkins in his element—running his restaurant, shucking oysters, and naturally using Square.
 
 The result is a testimonial that other operators instantly recognize as their own world, reinforcing that Square understands restaurants.`, 
     credits: `Creative Direction
@@ -195,11 +179,11 @@ Ian Watt, BANG!`,
 
   {
     title: 'The Internet',
-    category: 'Web Design / Social / Digital Ads',
+    category: 'Web / Interactive Design',
     description:
-     `A selection of digital work spanning social content and interactive web design, including series Running a Restaurant is No Joke with comedian and actor Eric Wareheim and Only the Good Stuff with singer and songwriter Kelis.
+     `A selection of digital and interactive work spanning social content and web design. This includes talent-led series like Running a Restaurant is No Joke with Eric Wareheim and Only the Good Stuff with Kelis.
 
-Additional interactive work available upon request.`,
+Additional work available upon request.`,
       credits: `Creative Direction
 Dave Brown, Monina Velarde, Jess Williams
             

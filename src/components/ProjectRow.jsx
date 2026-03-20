@@ -757,7 +757,7 @@ function ProjectRow({
             )}
 
             {category && (
-            <p className="font-arial text-[11px] leading-[1.35] min-[750px]:text-[9px] min-[750px]:leading-[1.26] tracking-[.1px] text-black">
+            <p className="font-arial font-semibold text-[11px] leading-[1.35] min-[750px]:text-[9px] min-[750px]:leading-[1.26] tracking-[.1px] text-black">
             {category}
           </p>
             )}
