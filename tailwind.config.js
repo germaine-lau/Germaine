@@ -4,9 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        caligari: ['F37 Caligari Trial', 'serif'],
-        serif: ['var(--font-weird-serif)'],
-        neue: ['var(--font-neue-haas)'],
+        weirdserif: ['var(--font-weird-serif)', 'Georgia', 'Times New Roman', 'serif'],
+        neue: ['var(--font-neue-haas)', 'Arial', 'Helvetica', 'sans-serif'],
       },
     },
   },

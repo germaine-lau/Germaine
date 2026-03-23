@@ -173,6 +173,11 @@ Ian Watt, BANG!`,
         type: "image",
         src: "/images/lobster_spin.gif",
         hideBelowDesktop: true,
+      },
+      {
+        type: "image",
+        src: "/images/lobster_spin.gif",
+        hideBelowDesktop: true,
       }
     ],
   },

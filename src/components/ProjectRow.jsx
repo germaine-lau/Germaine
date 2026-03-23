@@ -512,7 +512,6 @@ function ProjectRow({
       src={item.src}
   aria-label={item.alt ?? ''}
   muted
-  defaultMuted
   playsInline
   autoPlay
   loop={isPreviewVideo ? true : !hasInteracted}
@@ -556,7 +555,7 @@ function ProjectRow({
                     updateVideoState(videoKey, { paused: true });
                   }
                 }}
-              />
+              />  
               </div>
 
               {!isPreviewVideo && (

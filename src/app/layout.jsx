@@ -15,7 +15,9 @@ const weirdSerif = localFont({
     },
   ],
   variable: '--font-weird-serif',
-})
+  display: 'swap',
+  preload: true,
+});
 
 const neueHaas = localFont({
   src: [
@@ -27,7 +29,8 @@ const neueHaas = localFont({
   ],
   variable: '--font-neue-haas',
   display: 'swap',
-})
+  preload: true,
+});
 
 export const metadata = {
   title: 'Germaine Lau',
@@ -36,8 +39,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${weirdSerif.variable} ${neueHaas.variable}`}>
+    <html lang="en" className={`${weirdSerif.variable} ${neueHaas.variable}`}>
+      <body>
         {children}
       </body>
     </html>
