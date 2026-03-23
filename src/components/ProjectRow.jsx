@@ -49,9 +49,7 @@ function ProjectRow({
   const shouldLoopInfinitely = !disableCarousel && baseItems.length > 1;
 
   const loopedItems = useMemo(() => {
-    return shouldLoopInfinitely
-      ? [...baseItems, ...baseItems, ...baseItems]
-      : baseItems;
+    return shouldLoopInfinitely ? [...baseItems, ...baseItems, ...baseItems] : baseItems;
   }, [baseItems, shouldLoopInfinitely]);
 
   const imageItems = useMemo(
@@ -59,73 +57,71 @@ function ProjectRow({
     [baseItems]
   );
 
-  const allImageSizesReady = imageItems.every(
-    (item) => imageDimensions[item.src]
-  );
+  const allImageSizesReady = imageItems.every((item) => imageDimensions[item.src]);
 
   const projectId = title
     ? `project-${title.replace(/\s+/g, '-').toLowerCase()}`
     : undefined;
 
-    const railKey = disableCarousel
+  const railKey = disableCarousel
     ? `static-${title}-${baseItems.length}`
     : `carousel-${title}-${baseItems.length}`;
 
-    const setupInfiniteScroll = (scrollRef) => {
-      if (!shouldLoopInfinitely) return;
-    
-      const slider = scrollRef.current;
-      if (!slider) return;
-    
-      const children = Array.from(slider.children);
-      const setLength = baseItems.length;
-    
-      if (!children.length || !setLength) return;
-    
-      const firstItem = children[0];
-      const firstItemOfMiddleSet = children[setLength];
-    
-      if (!firstItem || !firstItemOfMiddleSet) return;
-    
-      slider.scrollLeft = Math.round(
-        firstItemOfMiddleSet.offsetLeft - firstItem.offsetLeft
-      );
-    };
+  const setupInfiniteScroll = (scrollRef) => {
+    if (!shouldLoopInfinitely) return;
 
-    const maintainInfiniteScroll = (scrollRef) => {
-      if (!shouldLoopInfinitely) return;
-    
-      const slider = scrollRef.current;
-      if (!slider) return;
-    
-      const children = Array.from(slider.children);
-      const setLength = baseItems.length;
-    
-      if (!children.length || !setLength) return;
-    
-      const firstItem = children[0];
-      const firstItemOfMiddleSet = children[setLength];
-      const firstItemOfThirdSet = children[setLength * 2];
-    
-      if (!firstItem || !firstItemOfMiddleSet || !firstItemOfThirdSet) return;
-    
-      const setWidth =
-        firstItemOfThirdSet.offsetLeft - firstItemOfMiddleSet.offsetLeft;
-    
-      const normalizedStart =
-        firstItemOfMiddleSet.offsetLeft - firstItem.offsetLeft;
-    
-      const normalizedEnd =
-        firstItemOfThirdSet.offsetLeft - firstItem.offsetLeft;
-    
-      const buffer = Math.max(80, Math.round(slider.clientWidth * 0.2));
-    
-      if (slider.scrollLeft <= normalizedStart - buffer) {
-        slider.scrollLeft += setWidth;
-      } else if (slider.scrollLeft >= normalizedEnd - buffer) {
-        slider.scrollLeft -= setWidth;
-      }
-    };
+    const slider = scrollRef.current;
+    if (!slider) return;
+
+    const children = Array.from(slider.children);
+    const setLength = baseItems.length;
+
+    if (!children.length || !setLength) return;
+
+    const firstItem = children[0];
+    const firstItemOfMiddleSet = children[setLength];
+
+    if (!firstItem || !firstItemOfMiddleSet) return;
+
+    slider.scrollLeft = Math.round(
+      firstItemOfMiddleSet.offsetLeft - firstItem.offsetLeft
+    );
+  };
+
+  const maintainInfiniteScroll = (scrollRef) => {
+    if (!shouldLoopInfinitely) return;
+
+    const slider = scrollRef.current;
+    if (!slider) return;
+
+    const children = Array.from(slider.children);
+    const setLength = baseItems.length;
+
+    if (!children.length || !setLength) return;
+
+    const firstItem = children[0];
+    const firstItemOfMiddleSet = children[setLength];
+    const firstItemOfThirdSet = children[setLength * 2];
+
+    if (!firstItem || !firstItemOfMiddleSet || !firstItemOfThirdSet) return;
+
+    const setWidth =
+      firstItemOfThirdSet.offsetLeft - firstItemOfMiddleSet.offsetLeft;
+
+    const normalizedStart =
+      firstItemOfMiddleSet.offsetLeft - firstItem.offsetLeft;
+
+    const normalizedEnd =
+      firstItemOfThirdSet.offsetLeft - firstItem.offsetLeft;
+
+    const buffer = Math.max(80, Math.round(slider.clientWidth * 0.2));
+
+    if (slider.scrollLeft <= normalizedStart - buffer) {
+      slider.scrollLeft += setWidth;
+    } else if (slider.scrollLeft >= normalizedEnd - buffer) {
+      slider.scrollLeft -= setWidth;
+    }
+  };
 
   const updateVideoState = (id, updates) => {
     setVideoStates((prev) => ({
@@ -332,6 +328,7 @@ function ProjectRow({
     desktopHeight,
     allImageSizesReady,
     hasVideoItems,
+    shouldLoopInfinitely,
   ]);
 
   useEffect(() => {
@@ -373,6 +370,31 @@ function ProjectRow({
       desktopObserver?.disconnect();
     };
   }, [isDesktopViewport]);
+
+  useEffect(() => {
+    const reviveVideos = () => {
+      Object.values(videoRefs.current).forEach((video) => {
+        if (!video) return;
+  
+        video.playsInline = true;
+        video.play().catch(() => {});
+      });
+    };
+  
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        reviveVideos();
+      }
+    };
+  
+    window.addEventListener('pageshow', reviveVideos);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+    return () => {
+      window.removeEventListener('pageshow', reviveVideos);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   const createMouseHandlers = (scrollRef, dragState) => ({
     handleMouseDown: (e) => {
@@ -443,13 +465,12 @@ function ProjectRow({
     const isVideo = item?.type === 'video';
     const isImage = item?.type === 'image';
     const isPreviewVideo = item?.previewMode === true;
-  
     const hideBelowDesktop = item?.hideBelowDesktop === true;
-  
+
     if (hideBelowDesktop && !isDesktopViewport) {
       return null;
     }
-  
+
     let itemWidth = item?.width ?? 320;
 
     if (isImage && item?.src && imageDimensions[item.src]) {
@@ -468,9 +489,6 @@ function ProjectRow({
 
     const videoKey = `${item?.src ?? 'video'}-${prefix}-${index}`;
     const hasInteracted = videoStates[videoKey]?.hasInteracted === true;
-    const isMuted = hasInteracted
-      ? videoStates[videoKey]?.muted ?? false
-      : true;
 
     return (
       <div
@@ -485,33 +503,33 @@ function ProjectRow({
         {item?.src ? (
           isVideo ? (
             <div
-            className="group relative h-full w-full"
-            data-no-drag="true"
-            onClick={() => {
-              const video = videoRefs.current[videoKey];
-              if (!video) return;
-            
-              if (isPreviewVideo) {
-                const video = e.currentTarget;
-                video.muted = true;
-                video.defaultMuted = true;
-                video.playsInline = true;
-                video.play().catch(() => {});
-                return;
-              }
-            
-              handleVideoPrimaryClick(videoKey);
-            }}
-          >
+              className="group relative h-full w-full"
+              data-no-drag="true"
+              onClick={(e) => {
+                e.stopPropagation();
+
+                const video = videoRefs.current[videoKey];
+                if (!video) return;
+
+                if (isPreviewVideo) {
+                  video.muted = true;
+                  video.playsInline = true;
+                  video.play().catch(() => {});
+                  return;
+                }
+
+                handleVideoPrimaryClick(videoKey);
+              }}
+            >
               <div className="media-item h-full w-full">
-    <video
-      key={videoKey}
-      ref={(el) => {
-        if (el) videoRefs.current[videoKey] = el;
-      }}
-      src={item.src}
+              <video
+  key={videoKey}
+  ref={(el) => {
+    if (el) videoRefs.current[videoKey] = el;
+  }}
+  src={item.src}
   aria-label={item.alt ?? ''}
-  muted
+  muted={isPreviewVideo ? true : !hasInteracted}
   playsInline
   autoPlay
   loop={isPreviewVideo ? true : !hasInteracted}
@@ -519,43 +537,71 @@ function ProjectRow({
   controls={false}
   poster=""
   className="block h-full w-full object-cover"
-                onLoadedMetadata={(e) => {
-                  if (isPreviewVideo) {
-                    e.currentTarget.muted = true;
-                    e.currentTarget.play().catch(() => {});
-                    return;
-                  }
+  onLoadedMetadata={(e) => {
+    const video = e.currentTarget;
+    video.playsInline = true;
 
-                  handleVideoLoadedMetadata(videoKey);
+    if (isPreviewVideo || !hasInteracted) {
+      video.muted = true;
+    }
 
-                  const video = e.currentTarget;
-                  video.muted = true;
+    if (isPreviewVideo) {
+      video.play().catch(() => {});
+      return;
+    }
 
-                  updateVideoState(videoKey, {
-                    muted: true,
-                    paused: video.paused,
-                    currentTime: video.currentTime || 0,
-                    duration: video.duration || 0,
-                  });
+    handleVideoLoadedMetadata(videoKey);
 
-                  video.play().catch(() => {});
-                }}
-                onTimeUpdate={() => {
-                  if (!isPreviewVideo) {
-                    handleVideoTimeUpdate(videoKey);
-                  }
-                }}
-                onPlay={() => {
-                  if (!isPreviewVideo) {
-                    updateVideoState(videoKey, { paused: false });
-                  }
-                }}
-                onPause={() => {
-                  if (!isPreviewVideo) {
-                    updateVideoState(videoKey, { paused: true });
-                  }
-                }}
-              />  
+    updateVideoState(videoKey, {
+      muted: video.muted,
+      paused: video.paused,
+      currentTime: video.currentTime || 0,
+      duration: video.duration || 0,
+    });
+
+    video.play().catch(() => {});
+  }}
+  onCanPlay={(e) => {
+    const video = e.currentTarget;
+    video.playsInline = true;
+
+    if (isPreviewVideo || !hasInteracted) {
+      video.muted = true;
+    }
+
+    if (video.paused) {
+      video.play().catch(() => {});
+    }
+  }}
+  onTimeUpdate={() => {
+    if (!isPreviewVideo) {
+      handleVideoTimeUpdate(videoKey);
+    }
+  }}
+  onPlay={() => {
+    if (!isPreviewVideo) {
+      updateVideoState(videoKey, { paused: false });
+    }
+  }}
+  onPause={() => {
+    if (!isPreviewVideo) {
+      updateVideoState(videoKey, { paused: true });
+    }
+  }}
+  onEnded={(e) => {
+    if (isPreviewVideo) return;
+
+    const video = e.currentTarget;
+    if (!hasInteracted) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    }
+  }}
+  onError={(e) => {
+    const video = e.currentTarget;
+    video.load();
+  }}
+/>
               </div>
 
               {!isPreviewVideo && (
@@ -579,12 +625,20 @@ function ProjectRow({
                           }
                         >
                           {videoStates[videoKey]?.paused === false ? (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="h-4 w-4 fill-current"
+                              aria-hidden="true"
+                            >
                               <rect x="6" y="5" width="4" height="14" />
                               <rect x="14" y="5" width="4" height="14" />
                             </svg>
                           ) : (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="h-4 w-4 fill-current"
+                              aria-hidden="true"
+                            >
                               <polygon points="8,5 19,12 8,19" />
                             </svg>
                           )}
@@ -618,16 +672,42 @@ function ProjectRow({
                           }
                         >
                           {videoStates[videoKey]?.muted ? (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="h-4 w-4"
+                              aria-hidden="true"
+                              fill="none"
+                            >
+                              <path
+                                d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z"
+                                fill="currentColor"
+                              />
                               <path d="M16 9l5 5" stroke="currentColor" strokeWidth="2" />
                               <path d="M21 9l-5 5" stroke="currentColor" strokeWidth="2" />
                             </svg>
                           ) : (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
-                              <path d="M16.5 9.5a4.5 4.5 0 0 1 0 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                              <path d="M18.5 7a8 8 0 0 1 0 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="h-4 w-4"
+                              aria-hidden="true"
+                              fill="none"
+                            >
+                              <path
+                                d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z"
+                                fill="currentColor"
+                              />
+                              <path
+                                d="M16.5 9.5a4.5 4.5 0 0 1 0 5"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                              />
+                              <path
+                                d="M18.5 7a8 8 0 0 1 0 10"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                              />
                             </svg>
                           )}
                         </button>
@@ -662,12 +742,12 @@ function ProjectRow({
             </div>
           ) : isImage ? (
             <img
-            src={item.src}
-            alt={item.alt ?? ''}
-            draggable={false}
-            onLoad={(e) => saveImageDimensions(item.src, e.currentTarget)}
-            className={`pointer-events-none block h-full w-full object-cover ${item?.className ?? ''}`}
-          />
+              src={item.src}
+              alt={item.alt ?? ''}
+              draggable={false}
+              onLoad={(e) => saveImageDimensions(item.src, e.currentTarget)}
+              className={`pointer-events-none block h-full w-full object-cover ${item?.className ?? ''}`}
+            />
           ) : null
         ) : (
           <div className="flex h-full w-full items-center justify-center">
@@ -692,27 +772,31 @@ function ProjectRow({
                 : 'relative left-1/2 right-1/2 ml-[-50vw] mr-[-50vw] w-screen'
             }
           >
-           <div
-  key={`${railKey}-mobile`}
-  ref={mobileScrollRef}
-  onMouseDown={mobileHandlers.handleMouseDown}
-  onMouseLeave={mobileHandlers.handleMouseUp}
-  onMouseUp={mobileHandlers.handleMouseUp}
-  onMouseMove={mobileHandlers.handleMouseMove}
-  onScroll={shouldLoopInfinitely ? () => maintainInfiniteScroll(mobileScrollRef) : undefined}
-  className={`flex h-[280px] justify-start items-stretch gap-[12px] overflow-y-hidden min-[750px]:h-[491px] ${
-    disableCarousel
-      ? `${pageGutter} overflow-x-hidden`
-      : 'overflow-x-auto'
-  } ${shouldLoopInfinitely ? 'scrollbar-hide select-none' : ''}`}
-  style={{
-    WebkitOverflowScrolling: 'touch',
-    overscrollBehaviorX: disableCarousel ? 'none' : 'contain',
-    cursor: shouldLoopInfinitely
-      ? "url('/smiley-hover.svg') 16 16, auto"
-      : 'auto',
-  }}
->
+            <div
+              key={`${railKey}-mobile`}
+              ref={mobileScrollRef}
+              onMouseDown={mobileHandlers.handleMouseDown}
+              onMouseLeave={mobileHandlers.handleMouseUp}
+              onMouseUp={mobileHandlers.handleMouseUp}
+              onMouseMove={mobileHandlers.handleMouseMove}
+              onScroll={
+                shouldLoopInfinitely
+                  ? () => maintainInfiniteScroll(mobileScrollRef)
+                  : undefined
+              }
+              className={`flex h-[280px] items-stretch justify-start gap-[12px] overflow-y-hidden min-[750px]:h-[491px] ${
+                disableCarousel
+                  ? `${pageGutter} overflow-x-hidden`
+                  : 'overflow-x-auto'
+              } ${shouldLoopInfinitely ? 'scrollbar-hide select-none' : ''}`}
+              style={{
+                WebkitOverflowScrolling: 'touch',
+                overscrollBehaviorX: disableCarousel ? 'none' : 'contain',
+                cursor: shouldLoopInfinitely
+                  ? "url('/smiley-hover.svg') 16 16, auto"
+                  : 'auto',
+              }}
+            >
               {loopedItems.map((item, index) =>
                 renderMediaItem(item, index, 'mobile', mobileHeight)
               )}
@@ -733,8 +817,12 @@ function ProjectRow({
               onMouseLeave={desktopHandlers.handleMouseUp}
               onMouseUp={desktopHandlers.handleMouseUp}
               onMouseMove={desktopHandlers.handleMouseMove}
-              onScroll={shouldLoopInfinitely ? () => maintainInfiniteScroll(desktopScrollRef) : undefined}
-              className={`flex h-[491px] justify-start items-stretch gap-[12px] overflow-y-hidden ${
+              onScroll={
+                shouldLoopInfinitely
+                  ? () => maintainInfiniteScroll(desktopScrollRef)
+                  : undefined
+              }
+              className={`flex h-[491px] items-stretch justify-start gap-[12px] overflow-y-hidden ${
                 disableCarousel ? 'overflow-x-hidden' : 'overflow-x-auto'
               } ${shouldLoopInfinitely ? 'scrollbar-hide select-none' : ''}`}
               style={{
@@ -753,9 +841,7 @@ function ProjectRow({
         )}
       </div>
 
-      <div
-        className={`mt-7 ${pageGutter} min-[850px]:order-1 min-[850px]:mt-[6px]`}
-      >
+      <div className={`mt-7 ${pageGutter} min-[850px]:order-1 min-[850px]:mt-[6px]`}>
         <div className="flex flex-col gap-8 min-[850px]:h-full min-[850px]:min-h-[491px] min-[850px]:justify-between">
           <div className="flex flex-col gap-3 min-[750px]:gap-[14px]">
             {title && (
@@ -768,13 +854,13 @@ function ProjectRow({
             )}
 
             {category && (
-            <p className="font-arial font-semibold text-[11px] leading-[1.35] min-[750px]:text-[9px] min-[750px]:leading-[1.26] tracking-[.1px] text-black">
-            {category}
-          </p>
+              <p className="font-arial font-semibold text-[11px] leading-[1.35] tracking-[.1px] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.26]">
+                {category}
+              </p>
             )}
 
             {description && (
-              <p className="max-w-[300px] min-[750px]:max-w-[240px] whitespace-pre-line font-arial text-[13px] leading-[1.35] min-[750px]:text-[10px] min-[750px]:leading-[1.25] tracking-[0px] text-black">
+              <p className="max-w-[300px] whitespace-pre-line font-arial text-[13px] leading-[1.35] tracking-[0px] text-black min-[750px]:max-w-[240px] min-[750px]:text-[10px] min-[750px]:leading-[1.25]">
                 {description}
               </p>
             )}
@@ -782,11 +868,11 @@ function ProjectRow({
 
           {credits && (
             <div className="flex flex-col gap-3 min-[750px]:gap-[12px] min-[850px]:mt-8">
-            <div className="w-fit rounded-[18px] border-[1px] border-black px-[8px] py-[2.25px] font-arial text-[10px] leading-[1.2] min-[750px]:text-[9px] min-[750px]:leading-[1.1] tracking-[.1] text-black">
-  Credits
-</div>
-          
-              <p className="max-w-[220px] min-[750px]:max-w-[140px] whitespace-pre-wrap font-arial text-[11px] leading-[1.35] min-[750px]:text-[9px] min-[750px]:leading-[1.26] tracking-[.1px] text-black">
+              <div className="w-fit rounded-[18px] border-[1px] border-black px-[8px] py-[2.25px] font-arial text-[10px] leading-[1.2] tracking-[.1] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.1]">
+                Credits
+              </div>
+
+              <p className="max-w-[220px] whitespace-pre-wrap font-arial text-[11px] leading-[1.35] tracking-[.1px] text-black min-[750px]:max-w-[140px] min-[750px]:text-[9px] min-[750px]:leading-[1.26]">
                 {credits}
               </p>
             </div>

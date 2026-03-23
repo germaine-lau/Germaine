@@ -113,8 +113,7 @@ Brett Baker, Jenn Young`,
       src: '/videos/Vegas_Trimmed.mp4',
       previewMode: true,
       loop: true
-    },
-    { type: 'image', src: '/images/1782662.jpg'},
+    }
   ],
 },
   
@@ -151,6 +150,7 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
   
     ],
   },
+
   {
     title: 'Broad Street Oyster x Square',
     category: 'Concept / Art Direction',
@@ -190,6 +190,7 @@ Ian Watt, BANG!`,
       }
     ],
   },
+  
 
   {
     title: 'The Internet',
@@ -205,7 +206,7 @@ Design
 Germaine Lau`,
 
     mediaItems: [
-      { type: 'image', src: '/images/Eric_01.png'},
+        { type: 'image', src: '/images/Eric_01.png'},
       { type: 'image', src: '/images/Eric_02.png'},
       { type: 'image', src: '/images/Eric_03.png'},
       {
