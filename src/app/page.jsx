@@ -114,6 +114,7 @@ Brett Baker, Jenn Young`,
       previewMode: true,
       loop: true
     },
+    { type: 'image', src: '/images/1782662.jpg'},
   ],
 },
   
@@ -136,9 +137,17 @@ Production
 Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
     mediaItems: [
       { type: 'image', src: '/images/Wildpostings_01.jpeg'},
-      { type: 'image', src: '/images/Wildpostings_02.jpeg'},
-      { type: 'image', src: '/images/1846344.jpg'},
+      { type: 'image', src: '/images/Wildpostings_02.png'},
+      {
+        type: 'video',
+        src: '/videos/SYITN_JobCreator.mp4',
+        previewMode: true,
+        aspectRatio: '1067:1600',
+        loop: true
+      },
+      { type: 'image', src: '/images/1846344.png'},
       { type: 'image', src: '/images/1846340.png'},
+    
   
     ],
   },
