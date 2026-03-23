@@ -66,7 +66,7 @@ Jennifer Bonilla, Terumi Fletcher`,
 mediaItems: [
   {
     type: 'video',
-    src: '/videos/katzsubwayvisit_2.mp4',
+    src: '/videos/Katz_Smaller.mp4',
     aspectRatio: '16 / 9',
     previewMode: true,
     loop: true
@@ -75,12 +75,6 @@ mediaItems: [
   { type: 'image', src: '/images/000001440034.jpg' },
   { type: 'image', src: '/images/Faregates.png' },
   { type: 'image', src: '/images/000001440019.jpg' },
-  {
-    type: 'video',
-    src: '/videos/Subway_Single_1.mp4',
-    previewMode: true,
-    loop: true
-  },
   { type: 'image', src: '/images/TimesChange_03.png'},
   { type: 'image', src: '/images/000001440025.jpg'},
   { type: 'image', src: '/images/TimesChange_02.png'},
@@ -110,7 +104,7 @@ Brett Baker, Jenn Young`,
   mediaItems: [
     {
       type: 'video',
-      src: '/videos/Vegas_Trimmed.mp4',
+      src: '/videos/Vegas_Smaller.mp4',
       previewMode: true,
       loop: true
     }
