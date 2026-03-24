@@ -221,6 +221,7 @@ function ProjectRow({
 
   const prepareMutedInlineVideo = (video) => {
     if (!video) return;
+    if (video.dataset.userActivated === 'true') return;
 
     video.muted = true;
     video.defaultMuted = true;
@@ -262,6 +263,7 @@ function ProjectRow({
       video.playsInline = true;
       video.setAttribute('playsinline', '');
       video.setAttribute('webkit-playsinline', 'true');
+      video.dataset.userActivated = 'true';
 
       await video.play();
 
@@ -443,11 +445,10 @@ function ProjectRow({
             video.play().catch(() => {});
           } else {
             video.pause();
-            video.currentTime = 0;
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.25 }
     );
 
     const videos = Object.values(videoRefs.current).filter(Boolean);
@@ -620,6 +621,9 @@ function ProjectRow({
                   ref={(el) => {
                     if (el) {
                       videoRefs.current[videoKey] = el;
+                      if (isPreviewVideo || !hasInteracted) {
+                        prepareMutedInlineVideo(el);
+                      }
                     } else {
                       delete videoRefs.current[videoKey];
                     }
@@ -629,14 +633,14 @@ function ProjectRow({
                   src={item.src}
                   aria-label={item.alt ?? ''}
                   muted={isPreviewVideo ? true : !hasInteracted}
+                  defaultMuted
                   playsInline
                   autoPlay
                   loop={isPreviewVideo ? true : !hasInteracted}
-                  preload="metadata"
+                  preload="auto"
                   controls={false}
                   disablePictureInPicture
                   disableRemotePlayback
-                  poster=""
                   className="block h-full w-full object-cover"
                   onLoadedMetadata={(e) => {
                     const video = e.currentTarget;
