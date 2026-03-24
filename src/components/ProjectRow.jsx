@@ -219,14 +219,47 @@ function ProjectRow({
     return `${minutes}:${String(seconds).padStart(2, '0')}`;
   };
 
+  const prepareMutedInlineVideo = (video) => {
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
+  };
+
+  const isVideoVisibleEnough = (video) => {
+    if (!video) return false;
+
+    const rect = video.getBoundingClientRect();
+
+    return (
+      rect.width > 0 &&
+      rect.height > 0 &&
+      rect.top < window.innerHeight * 0.85 &&
+      rect.bottom > window.innerHeight * 0.15
+    );
+  };
+
   const activateVideoWithSound = async (videoKey) => {
     const video = videoRefs.current[videoKey];
     if (!video) return;
 
     try {
+      updateVideoState(videoKey, {
+        hasInteracted: true,
+        muted: false,
+        paused: false,
+      });
+
       video.currentTime = 0;
       video.muted = false;
+      video.defaultMuted = false;
       video.loop = false;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', 'true');
 
       await video.play();
 
@@ -236,9 +269,6 @@ function ProjectRow({
       }));
 
       updateVideoState(videoKey, {
-        hasInteracted: true,
-        muted: false,
-        paused: false,
         currentTime: video.currentTime || 0,
         duration: video.duration || 0,
       });
@@ -372,29 +402,69 @@ function ProjectRow({
   }, [isDesktopViewport]);
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          const videoKey = video.dataset.videoKey;
+          if (!videoKey) return;
+
+          const hasInteracted = videoStates[videoKey]?.hasInteracted === true;
+          const isPreviewVideo = video.dataset.previewVideo === 'true';
+
+          if (hasInteracted && !isPreviewVideo) return;
+
+          if (entry.isIntersecting) {
+            prepareMutedInlineVideo(video);
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+            video.currentTime = 0;
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    const videos = Object.values(videoRefs.current).filter(Boolean);
+    videos.forEach((video) => observer.observe(video));
+
+    return () => observer.disconnect();
+  }, [loopedItems, isDesktopViewport, videoStates]);
+
+  useEffect(() => {
     const reviveVideos = () => {
       Object.values(videoRefs.current).forEach((video) => {
         if (!video) return;
-  
-        video.playsInline = true;
+
+        const videoKey = video.dataset.videoKey;
+        if (!videoKey) return;
+
+        const hasInteracted = videoStates[videoKey]?.hasInteracted === true;
+        const isPreviewVideo = video.dataset.previewVideo === 'true';
+
+        if (hasInteracted && !isPreviewVideo) return;
+        if (!isVideoVisibleEnough(video)) return;
+
+        prepareMutedInlineVideo(video);
         video.play().catch(() => {});
       });
     };
-  
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         reviveVideos();
       }
     };
-  
+
     window.addEventListener('pageshow', reviveVideos);
     document.addEventListener('visibilitychange', handleVisibilityChange);
-  
+
     return () => {
       window.removeEventListener('pageshow', reviveVideos);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, []);
+  }, [videoStates]);
 
   const createMouseHandlers = (scrollRef, dragState) => ({
     handleMouseDown: (e) => {
@@ -512,8 +582,7 @@ function ProjectRow({
                 if (!video) return;
 
                 if (isPreviewVideo) {
-                  video.muted = true;
-                  video.playsInline = true;
+                  prepareMutedInlineVideo(video);
                   video.play().catch(() => {});
                   return;
                 }
@@ -522,86 +591,98 @@ function ProjectRow({
               }}
             >
               <div className="media-item h-full w-full">
-              <video
-  key={videoKey}
-  ref={(el) => {
-    if (el) videoRefs.current[videoKey] = el;
-  }}
-  src={item.src}
-  aria-label={item.alt ?? ''}
-  muted={isPreviewVideo ? true : !hasInteracted}
-  playsInline
-  autoPlay
-  loop={isPreviewVideo ? true : !hasInteracted}
-  preload="metadata"
-  controls={false}
-  poster=""
-  className="block h-full w-full object-cover"
-  onLoadedMetadata={(e) => {
-    const video = e.currentTarget;
-    video.playsInline = true;
+                <video
+                  key={videoKey}
+                  ref={(el) => {
+                    if (el) {
+                      videoRefs.current[videoKey] = el;
+                    } else {
+                      delete videoRefs.current[videoKey];
+                    }
+                  }}
+                  data-video-key={videoKey}
+                  data-preview-video={isPreviewVideo ? 'true' : 'false'}
+                  src={item.src}
+                  aria-label={item.alt ?? ''}
+                  muted={isPreviewVideo ? true : !hasInteracted}
+                  playsInline
+                  autoPlay
+                  loop={isPreviewVideo ? true : !hasInteracted}
+                  preload="metadata"
+                  controls={false}
+                  poster=""
+                  className="block h-full w-full object-cover"
+                  onLoadedMetadata={(e) => {
+                    const video = e.currentTarget;
+                    video.playsInline = true;
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', 'true');
 
-    if (isPreviewVideo || !hasInteracted) {
-      video.muted = true;
-    }
+                    if (isPreviewVideo || !hasInteracted) {
+                      video.muted = true;
+                      video.defaultMuted = true;
+                    }
 
-    if (isPreviewVideo) {
-      video.play().catch(() => {});
-      return;
-    }
+                    if (isPreviewVideo) {
+                      video.play().catch(() => {});
+                      return;
+                    }
 
-    handleVideoLoadedMetadata(videoKey);
+                    handleVideoLoadedMetadata(videoKey);
 
-    updateVideoState(videoKey, {
-      muted: video.muted,
-      paused: video.paused,
-      currentTime: video.currentTime || 0,
-      duration: video.duration || 0,
-    });
+                    updateVideoState(videoKey, {
+                      muted: video.muted,
+                      paused: video.paused,
+                      currentTime: video.currentTime || 0,
+                      duration: video.duration || 0,
+                    });
 
-    video.play().catch(() => {});
-  }}
-  onCanPlay={(e) => {
-    const video = e.currentTarget;
-    video.playsInline = true;
+                    video.play().catch(() => {});
+                  }}
+                  onCanPlay={(e) => {
+                    const video = e.currentTarget;
+                    video.playsInline = true;
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', 'true');
 
-    if (isPreviewVideo || !hasInteracted) {
-      video.muted = true;
-    }
+                    if (isPreviewVideo || !hasInteracted) {
+                      video.muted = true;
+                      video.defaultMuted = true;
+                    }
 
-    if (video.paused) {
-      video.play().catch(() => {});
-    }
-  }}
-  onTimeUpdate={() => {
-    if (!isPreviewVideo) {
-      handleVideoTimeUpdate(videoKey);
-    }
-  }}
-  onPlay={() => {
-    if (!isPreviewVideo) {
-      updateVideoState(videoKey, { paused: false });
-    }
-  }}
-  onPause={() => {
-    if (!isPreviewVideo) {
-      updateVideoState(videoKey, { paused: true });
-    }
-  }}
-  onEnded={(e) => {
-    if (isPreviewVideo) return;
+                    if (video.paused && (isPreviewVideo || !hasInteracted)) {
+                      video.play().catch(() => {});
+                    }
+                  }}
+                  onTimeUpdate={() => {
+                    if (!isPreviewVideo) {
+                      handleVideoTimeUpdate(videoKey);
+                    }
+                  }}
+                  onPlay={() => {
+                    if (!isPreviewVideo) {
+                      updateVideoState(videoKey, { paused: false });
+                    }
+                  }}
+                  onPause={() => {
+                    if (!isPreviewVideo) {
+                      updateVideoState(videoKey, { paused: true });
+                    }
+                  }}
+                  onEnded={(e) => {
+                    if (isPreviewVideo) return;
 
-    const video = e.currentTarget;
-    if (!hasInteracted) {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    }
-  }}
-  onError={(e) => {
-    const video = e.currentTarget;
-    video.load();
-  }}
-/>
+                    const video = e.currentTarget;
+                    if (!hasInteracted) {
+                      video.currentTime = 0;
+                      video.play().catch(() => {});
+                    }
+                  }}
+                  onError={(e) => {
+                    const video = e.currentTarget;
+                    video.load();
+                  }}
+                />
               </div>
 
               {!isPreviewVideo && (
