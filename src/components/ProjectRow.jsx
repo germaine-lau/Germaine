@@ -560,6 +560,10 @@ function ProjectRow({
     const isVideo = item?.type === 'video';
     const isImage = item?.type === 'image';
     const isPreviewVideo = item?.previewMode === true;
+    const isBroadStreetProject =
+      typeof title === 'string' && title.toLowerCase().includes('broad street');
+    const isMobileForcedPreview = !isDesktopViewport && !isBroadStreetProject;
+    const shouldUsePreviewBehavior = isPreviewVideo || isMobileForcedPreview;
     const hideBelowDesktop = item?.hideBelowDesktop === true;
 
     if (hideBelowDesktop && !isDesktopViewport) {
@@ -606,7 +610,7 @@ function ProjectRow({
                 const video = videoRefs.current[videoKey];
                 if (!video) return;
 
-                if (isPreviewVideo) {
+                if (shouldUsePreviewBehavior) {
                   prepareMutedInlineVideo(video);
                   video.play().catch(() => {});
                   return;
@@ -621,7 +625,7 @@ function ProjectRow({
                   ref={(el) => {
                     if (el) {
                       videoRefs.current[videoKey] = el;
-                      if (isPreviewVideo || !hasInteracted) {
+                      if (shouldUsePreviewBehavior || !hasInteracted) {
                         prepareMutedInlineVideo(el);
                       }
                     } else {
@@ -629,14 +633,14 @@ function ProjectRow({
                     }
                   }}
                   data-video-key={videoKey}
-                  data-preview-video={isPreviewVideo ? 'true' : 'false'}
+                  data-preview-video={shouldUsePreviewBehavior ? 'true' : 'false'}
                   src={item.src}
                   aria-label={item.alt ?? ''}
-                  muted={isPreviewVideo ? true : !hasInteracted}
+                  muted={shouldUsePreviewBehavior ? true : !hasInteracted}
                   defaultMuted
                   playsInline
                   autoPlay
-                  loop={isPreviewVideo ? true : !hasInteracted}
+                  loop={shouldUsePreviewBehavior ? true : !hasInteracted}
                   preload="auto"
                   controls={false}
                   disablePictureInPicture
@@ -648,12 +652,12 @@ function ProjectRow({
                     video.setAttribute('playsinline', '');
                     video.setAttribute('webkit-playsinline', 'true');
 
-                    if (isPreviewVideo || !hasInteracted) {
+                    if (shouldUsePreviewBehavior || !hasInteracted) {
                       video.muted = true;
                       video.defaultMuted = true;
                     }
 
-                    if (isPreviewVideo) {
+                    if (shouldUsePreviewBehavior) {
                       video.play().catch(() => {});
                       return;
                     }
@@ -675,32 +679,32 @@ function ProjectRow({
                     video.setAttribute('playsinline', '');
                     video.setAttribute('webkit-playsinline', 'true');
 
-                    if (isPreviewVideo || !hasInteracted) {
+                    if (shouldUsePreviewBehavior || !hasInteracted) {
                       video.muted = true;
                       video.defaultMuted = true;
                     }
 
-                    if (video.paused && (isPreviewVideo || !hasInteracted)) {
+                    if (video.paused && (shouldUsePreviewBehavior || !hasInteracted)) {
                       video.play().catch(() => {});
                     }
                   }}
                   onTimeUpdate={() => {
-                    if (!isPreviewVideo) {
+                    if (!shouldUsePreviewBehavior) {
                       handleVideoTimeUpdate(videoKey);
                     }
                   }}
                   onPlay={() => {
-                    if (!isPreviewVideo) {
+                    if (!shouldUsePreviewBehavior) {
                       updateVideoState(videoKey, { paused: false });
                     }
                   }}
                   onPause={() => {
-                    if (!isPreviewVideo) {
+                    if (!shouldUsePreviewBehavior) {
                       updateVideoState(videoKey, { paused: true });
                     }
                   }}
                   onEnded={(e) => {
-                    if (isPreviewVideo) return;
+                    if (shouldUsePreviewBehavior) return;
 
                     const video = e.currentTarget;
                     if (!hasInteracted) {
@@ -715,7 +719,7 @@ function ProjectRow({
                 />
               </div>
 
-              {!isPreviewVideo && (
+              {!shouldUsePreviewBehavior && (
                 <>
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
