@@ -205,7 +205,7 @@ Germaine Lau`,
       { type: 'image', src: '/images/Eric_03.png'},
       {
         type: 'video',
-        src: '/videos/Kelis_Desktop.mp4',
+        src: '/videos/Kelis_Smaller.mp4',
         previewMode: true,
         loop: true,
         aspectRatio: '36 / 29'
