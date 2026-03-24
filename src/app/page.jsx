@@ -140,7 +140,7 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
       },
       { type: 'image', src: '/images/1846344.png'},
       { type: 'image', src: '/images/1846340.png'},
-      { type: 'image', src: '/images/image 13.png'},
+
     
   
     ],
