@@ -225,8 +225,10 @@ function ProjectRow({
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
+    video.autoplay = true;
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('autoplay', '');
   };
 
   const isVideoVisibleEnough = (video) => {
@@ -402,6 +404,27 @@ function ProjectRow({
   }, [isDesktopViewport]);
 
   useEffect(() => {
+    Object.values(videoRefs.current).forEach((video) => {
+      if (!video) return;
+
+      const videoKey = video.dataset.videoKey;
+      if (!videoKey) return;
+
+      const hasInteracted = videoStates[videoKey]?.hasInteracted === true;
+      const isPreviewVideo = video.dataset.previewVideo === 'true';
+
+      video.autoplay = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', 'true');
+      video.setAttribute('autoplay', '');
+
+      if (isPreviewVideo || !hasInteracted) {
+        video.muted = true;
+        video.defaultMuted = true;
+      }
+    });
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -416,6 +439,7 @@ function ProjectRow({
 
           if (entry.isIntersecting) {
             prepareMutedInlineVideo(video);
+            video.autoplay = true;
             video.play().catch(() => {});
           } else {
             video.pause();
@@ -610,6 +634,8 @@ function ProjectRow({
                   loop={isPreviewVideo ? true : !hasInteracted}
                   preload="metadata"
                   controls={false}
+                  disablePictureInPicture
+                  disableRemotePlayback
                   poster=""
                   className="block h-full w-full object-cover"
                   onLoadedMetadata={(e) => {
