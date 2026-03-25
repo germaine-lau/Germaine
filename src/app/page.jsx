@@ -110,8 +110,6 @@ Brett Baker, Jenn Young`,
     },
     { type: 'image', src: '/images/Vegas_01.png'},
     { type: 'image', src: '/images/Vegas_02.png'},
-    { type: 'image', src: '/images/Vegas_03.png'},
-    { type: 'image', src: '/images/Vegas_04.png'},
   ],
 },
   
