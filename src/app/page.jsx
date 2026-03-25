@@ -110,6 +110,7 @@ Brett Baker, Jenn Young`,
     },
     { type: 'image', src: '/images/Vegas_01.png'},
     { type: 'image', src: '/images/Vegas_02.png'},
+
   ],
 },
   
@@ -195,9 +196,7 @@ Design
 Germaine Lau`,
 
     mediaItems: [
-        { type: 'image', src: '/images/Eric_01.png'},
-      { type: 'image', src: '/images/Eric_02.png'},
-      { type: 'image', src: '/images/Eric_03.png'},
+  
       {
         type: 'video',
         src: '/videos/Kelis_Smaller.mp4',
@@ -206,6 +205,9 @@ Germaine Lau`,
         aspectRatio: '36 / 29'
       },
       { type: 'image', src: '/images/Kelis_Mobile.png'},
+      { type: 'image', src: '/images/Eric_01.png'},
+      { type: 'image', src: '/images/Eric_02.png'},
+      { type: 'image', src: '/images/Eric_03.png'},
     ], 
   },
  
