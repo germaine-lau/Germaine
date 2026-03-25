@@ -87,7 +87,7 @@ mediaItems: [
   category: 'Concept / Art Direction',
   description: `Square launched one of its largest OOH activations in Las Vegas. With 400+ placements throughout the city, the campaign cut through the city’s visual noise while reinforcing Square’s role in restaurants.
 
-I developed the winning “Restaurant Essentials” concept for high-profile placements at Caesars Palace and Resorts World. Pairing everyday restaurant objects with Square hardware, the work framed Square as a restaurant essential—on par with kitchen labeling tape.
+I developed the winning “Restaurant Essentials” concept for high-profile placements at Caesars Palace and Resorts World. Pairing everyday restaurant objects with Square hardware, the work framed Square as a restaurant essential—on par with kitchen labeling tape and deli containers.
 
 The campaign later expanded into Chicago’s National Restaurant Association to reach the industry’s largest gatherings of operators.`, 
   credits: `Creative Direction
@@ -107,7 +107,11 @@ Brett Baker, Jenn Young`,
       src: '/videos/Vegas_Smaller.mp4',
       previewMode: true,
       loop: true
-    }
+    },
+    { type: 'image', src: '/images/Vegas_01.png'},
+    { type: 'image', src: '/images/Vegas_02.png'},
+    { type: 'image', src: '/images/Vegas_03.png'},
+    { type: 'image', src: '/images/Vegas_04.png'},
   ],
 },
   
@@ -131,15 +135,7 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
     mediaItems: [
       { type: 'image', src: '/images/Wildpostings_01.jpeg'},
       { type: 'image', src: '/images/Wildpostings_02.png'},
-      {
-        type: 'video',
-        src: '/videos/SYITN_JobCreator.mp4',
-        previewMode: true,
-        aspectRatio: '1067:1600',
-        loop: true
-      },
       { type: 'image', src: '/images/1846344.png'},
-      { type: 'image', src: '/images/1846340.png'},
 
     
   
