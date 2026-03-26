@@ -35,7 +35,7 @@ mediaItems: [
   { type: 'image', src: '/images/Booth_01.png'},
   { type: 'image', src: '/images/Booth_02.png'},
   { type: 'image', src: '/images/Brochure_Front.png'},
-  { type: 'image', src: '/images/Brochure_Inside.png'},
+  { type: 'image', src: '/images/Brochure_04.png'},
   { type: 'image', src: '/images/PosPros_Billboard.png'},
  
 ],
