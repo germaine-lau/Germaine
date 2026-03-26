@@ -135,6 +135,7 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
       { type: 'image', src: '/images/Wildpostings_01.jpeg'},
       { type: 'image', src: '/images/Wildpostings_02.png'},
       { type: 'image', src: '/images/1846344.png'},
+      { type: 'image', src: '/images/1846340.png'},
 
     
   
