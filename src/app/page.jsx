@@ -134,16 +134,7 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
     mediaItems: [
       { type: 'image', src: '/images/Wildpostings_01.jpeg'},
       { type: 'image', src: '/images/Wildpostings_02.png'},
-      {
-        type: 'video',
-        src: '/videos/SYITN_JobCreator.mp4',
-        aspectRatio: '2 / 3',
-        previewMode: true,
-        loop: true
-      },
-      
-      { type: 'image', src: '/images/1846344.png'},
-      { type: 'image', src: '/images/1846340.png'},
+      { type: 'image', src: '/images/SYITN_10.png'},
       {
         type: 'video',
         src: '/videos/SYITN_TY.mp4',
@@ -151,6 +142,12 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
         previewMode: true,
         loop: true
       },
+
+      { type: 'image', src: '/images/1846344.png'},
+      { type: 'image', src: '/images/1846340.png'},
+      
+   
+      
 
     
       
