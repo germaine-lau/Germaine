@@ -119,7 +119,7 @@ Brett Baker, Jenn Young`,
     category: 'Art Direction',
     description: `Square’s See You in the Neighborhood campaign introduced a refreshed brand identity and tagline through a national rollout spanning 300+ OOH assets across eight major cities.
 
-I led the design and animation of all digital and high-impact print across the campaign. The system was localized to each city, featuring real businesses to position Square as a fixture in the neighborhood.`, 
+I led the design and animation of all digital and high-impact print across the campaign. The system was localized to each city, highlighting real businesses to position Square as a fixture in the neighborhood.`, 
        credits: `Creative Direction
 Sean Conroy, Said Fayad
 
