@@ -1,10 +1,12 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProjectRow from '@/components/ProjectRow';
+import { PAGE_GUTTER } from '../lib/layout';
 
 
 const DEFAULT_NAV_ITEMS = [
   { label: 'about', href: '/about' },
+  { label: 'play', href: '/play' },
   { label: 'contact', href: 'mailto:hello@germainelau.com' },
   { label: 'linkedin', href: 'https://www.linkedin.com/in/germaine-lau/' },
 ];
@@ -132,8 +134,6 @@ Jonathan Skale
 Production
 Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
     mediaItems: [
-      { type: 'image', src: '/images/Wildpostings_01.jpeg'},
-      { type: 'image', src: '/images/Wildpostings_02.png'},
       { type: 'image', src: '/images/SYITN_10.png'},
       {
         type: 'video',
@@ -142,9 +142,8 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
         previewMode: true,
         loop: true
       },
-
-      { type: 'image', src: '/images/1846344.png'},
-      { type: 'image', src: '/images/1846340.png'},
+      { type: 'image', src: '/images/Wildpostings_01.jpeg'},
+      { type: 'image', src: '/images/Wildpostings_02.png'},
       {
         type: 'video',
         src: '/videos/SYITN_JobCreator.mp4',
@@ -152,6 +151,9 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
         previewMode: true,
         loop: true
       },
+      { type: 'image', src: '/images/1846344.png'},
+      { type: 'image', src: '/images/1846340.png'},
+     
     
   
     ],
@@ -185,15 +187,21 @@ Ian Watt, BANG!`,
         aspectRatio: "5 / 4"
       },
       {
-        type: "image",
-        src: "/images/lobster_spin.gif",
+        type: "video",
+        src: "/videos/lobster_transparent.mp4",
+        aspectRatio: "5 / 4",
+        previewMode: true,
+        loop: true,
         hideBelowDesktop: true,
       },
       {
-        type: "image",
-        src: "/images/lobster_spin.gif",
+        type: "video",
+        src: "/videos/lobster_transparent.mp4",
+        aspectRatio: "5 / 4",
+        previewMode: true,
+        loop: true,
         hideBelowDesktop: true,
-      }
+      },
     ],
   },
   
@@ -230,11 +238,9 @@ Germaine Lau`,
 ];
 
 export default function Home() {
-  const pageGutter = 'px-8 min-[750px]:px-[40px]';
-
   return (
     <div className="min-h-screen flex flex-col bg-white w-full">
-      <header className={`flex-shrink-0 pb-0 min-[850px]:pb-7 ${pageGutter}`}>
+      <header className={`flex-shrink-0 pb-0 min-[850px]:pb-7 ${PAGE_GUTTER}`}>
         <Header
           logoName="germaine"
           tagline={'multidisciplinary designer + art director \n→ based in San Francisco, CA'}
@@ -243,7 +249,7 @@ export default function Home() {
       </header>
 
       <div className="block min-[850px]:hidden w-full">
-        <div className={`${pageGutter} border-t border-black w-full`} />
+        <div className={`${PAGE_GUTTER} border-t border-black w-full`} />
       </div>
 
       <div

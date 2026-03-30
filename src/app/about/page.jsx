@@ -8,6 +8,7 @@ import PageLayout from '@/components/PageLayout';
 
 const DEFAULT_NAV_ITEMS = [
   { label: 'about', href: '/about' },
+  { label: 'play', href: '/play' },
   { label: 'contact', href: 'mailto:hello@germainelau.com' },
   { label: 'linkedin', href: 'https://www.linkedin.com/in/germaine-lau/' },
 ];
@@ -16,7 +17,7 @@ const DEFAULT_EXPERIENCE = [
   {
     title: 'Square',
     subtitle: 'Senior Designer',
-    dates: 'August 2020 – Current',
+    dates: 'August 2020 – March 2026',
   },
   {
     title: 'SFMOMA',
@@ -26,7 +27,7 @@ const DEFAULT_EXPERIENCE = [
   {
     title: 'Academy of Art University',
     subtitle: 'Graphic Design, BFA',
-    award: '2020 Design Excellence Award',
+    award: '2022 Design Excellence Award',
   },
 ];
 
@@ -43,30 +44,31 @@ I’m currently open for work. Reach out if you’d like to brainstorm an idea o
 export default function HomePage() {
   return (
     <PageLayout
-      header={
-        <Header
-          logoName="germaine"
-          tagline={'multidisciplinary designer + art director \n→ based in San Francisco, CA'}
-          navItems={DEFAULT_NAV_ITEMS}
-        />
-      }
-      heroImage={
-        <HeroImage
-          src="/images/WebProfile.png"
-          alt="Portrait"
-        />
-      }
-      content={
-        <Content>
-          <div className="max-w-[619px] w-full">
-            <RichTextSection heading="Hello">{DEFAULT_INTRO}</RichTextSection>
-          </div>
-          <div className="w-full">
-            <ExperienceSection title="Experience" items={DEFAULT_EXPERIENCE} />
-          </div>
-        </Content>
-      }
-      footer={<Footer leftContent="hello@germainelau.com" rightContent="2026" />}
-    />
+    showMobileHeaderRule={false}
+    header={
+      <Header
+        logoName="germaine"
+        tagline={'multidisciplinary designer + art director \n→ based in San Francisco, CA'}
+        navItems={DEFAULT_NAV_ITEMS}
+      />
+    }
+    heroImage={
+      <HeroImage
+        src="/images/WebProfile.png"
+        alt="Portrait"
+      />
+    }
+    content={
+      <Content>
+        <div className="max-w-[619px] w-full">
+          <RichTextSection heading="Hello">{DEFAULT_INTRO}</RichTextSection>
+        </div>
+        <div className="w-full">
+          <ExperienceSection title="Experience" items={DEFAULT_EXPERIENCE} />
+        </div>
+      </Content>
+    }
+    footer={<Footer leftContent="hello@germainelau.com" rightContent="2026" />}
+  />
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { PAGE_GUTTER_LEFT } from '../lib/layout';
 
 function ProjectRow({
   title,
@@ -33,8 +34,6 @@ function ProjectRow({
     startX: 0,
     scrollLeft: 0,
   });
-
-  const pageGutter = 'pl-8 min-[750px]:pl-[40px]';
 
   const baseItems = useMemo(
     () => (mediaItems.length ? mediaItems.filter((item) => item?.src || item?.type) : []),
@@ -875,7 +874,7 @@ function ProjectRow({
 
   return (
     <section
-      className={`w-full pb-12 pt-6 min-[750px]:pb-28 min-[750px]:pt-7 min-[850px]:grid min-[850px]:grid-cols-[360px,minmax(0,1fr)] min-[850px]:items-stretch min-[850px]:gap-[64px] min-[850px]:pt-[28px] last:pb-8 min-[750px]:last:pb-0 ${className}`}
+      className={`w-full pb-12 pt-6 min-[750px]:pb-32 min-[750px]:pt-7 min-[850px]:grid min-[850px]:grid-cols-[360px,minmax(0,1fr)] min-[850px]:items-stretch min-[850px]:gap-[64px] min-[850px]:pt-[28px] last:pb-8 min-[750px]:last:pb-0 ${className}`}
       aria-labelledby={projectId}
     >
       <div className="min-w-0 min-[850px]:order-2">
@@ -901,7 +900,7 @@ function ProjectRow({
               }
               className={`flex h-[280px] items-stretch justify-start gap-[12px] overflow-y-hidden min-[750px]:h-[491px] ${
                 disableCarousel
-                  ? `${pageGutter} overflow-x-hidden`
+                  ? `${PAGE_GUTTER_LEFT} overflow-x-hidden`
                   : 'overflow-x-auto'
               } ${shouldLoopInfinitely ? 'scrollbar-hide select-none' : ''}`}
               style={{
@@ -956,7 +955,7 @@ function ProjectRow({
         )}
       </div>
 
-      <div className={`mt-7 ${pageGutter} min-[850px]:order-1 min-[850px]:mt-[6px]`}>
+      <div className={`mt-7 ${PAGE_GUTTER_LEFT} min-[850px]:order-1 min-[850px]:mt-[6px]`}>
         <div className="flex flex-col gap-8 min-[850px]:h-full min-[850px]:min-h-[491px] min-[850px]:justify-between">
           <div className="flex flex-col gap-3 min-[750px]:gap-[14px]">
             {title && (
