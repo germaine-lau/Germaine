@@ -17,9 +17,7 @@ const HOMEPAGE_PROJECTS = [
     category: 'Experiential / Print',
     description:`Most POS marketing blend together with soft promises and generic claims. At the Bar and Restaurant Expo, we took a more direct approach. Using the blunt clarity (and slight absurdity) of lawyer ads, we called out real operator pain points with a clear directive: Call Square.
 
-I led a rethinking of the booth collateral, breaking from typical POS conventions to create materials that made product features and seller stories engaging—something operators would actually want to pick up and spend time with.
-
-The result was a tradeshow experience that stood out visually and made Square’s value immediately clear, saying exactly what we mean without burying it.`, 
+I led a rethinking of the booth collateral, breaking from typical POS conventions to create materials that made product features and seller stories engaging. The result was a a system that made Square’s value immediate. No soft language, no burying the point.`, 
 credits: `Creative Direction
 Sean Conroy, Christian Wildic
 
@@ -87,11 +85,12 @@ mediaItems: [
 {
   title: 'Big in Restaurants',
   category: 'Concept / Art Direction',
-  description: `Square launched one of its largest OOH activations in Las Vegas. With 400+ placements throughout the city, the campaign cut through the city’s visual noise while reinforcing Square’s role in restaurants.
+  description: `Square launched one of its largest OOH activations in Las Vegas. With 400+ placements, the campaign cut through the city’s visual noise while reinforcing Square’s role in restaurants.
 
-I developed the winning “Restaurant Essentials” concept for high-profile placements at Caesars Palace and Resorts World. Pairing everyday restaurant objects with Square hardware, the work framed Square as a restaurant essential—on par with kitchen labeling tape and deli containers.
+I developed the “Restaurant Essentials” concept for key placements at Caesars Palace and Resorts World—pairing everyday objects like kitchen tape and deli containers with Square hardware to position it as a true restaurant essential.
 
-The campaign later expanded into Chicago’s National Restaurant Association to reach the industry’s largest gatherings of operators.`, 
+The campaign later expanded into Chicago’s National Restaurant Association to reach the industry’s largest gatherings of operators.
+`, 
   credits: `Creative Direction
 Monina Velarde, Dave Brown, Sean Conroy, Shawna Wagman
 
@@ -156,9 +155,7 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
     title: 'Broad Street Oyster x Square',
     category: 'Concept / Art Direction',
     description:
-     `Restaurant testimonials often follow a familiar formula: seated interviews over b-roll. But operators don’t spend their day talking about their POS. They spend it running their restaurant.
-
-To challenge the perception that Square isn’t built for restaurants, we built the story around a live service. I shaped the approach to keep owner Christopher Tompkins in his element—running his restaurant, shucking oysters, and naturally using Square.
+     `To challenge the perception that Square isn’t built for restaurants, we moved beyond the typical sit-down testimonial format and centered the story around a live service—keeping owner Christopher Tompkins in his element, shucking oysters and naturally using Square.
 
 The result is a testimonial that other operators instantly recognize as their own world, reinforcing that Square understands restaurants.`, 
     credits: `Creative Direction
@@ -222,9 +219,12 @@ Germaine Lau`,
         aspectRatio: '36 / 29'
       },
       { type: 'image', src: '/images/Kelis_Mobile.png'},
-      { type: 'image', src: '/images/Eric_01.png'},
       { type: 'image', src: '/images/Eric_02.png'},
+      { type: 'image', src: '/images/Social_Woon01.png'},
+      { type: 'image', src: '/images/Social_Kiosk.png'},
+      { type: 'image', src: '/images/Social_Woon02.png'},
       { type: 'image', src: '/images/Eric_03.png'},
+      { type: 'image', src: '/images/Social_TheSportsBra.png'},
     ], 
   },
  
