@@ -152,6 +152,42 @@ Chris Mah, Stefania Mercante, Jennifer Bonilla, Terumi Fletcher`,
   },
 
   {
+    title: 'The Internet',
+    category: 'Web / Interactive Design',
+    description:
+     `A selection of digital and interactive work spanning social content and web design. This includes talent-led series like Running a Restaurant is No Joke with Eric Wareheim and Only the Good Stuff with Kelis.
+
+Additional work available upon request.`,
+      credits: `Creative Direction
+Dave Brown, Monina Velarde, Jess Williams
+            
+Design
+Germaine Lau
+
+Copy
+Jenn Young, Mike Grover`,
+
+    mediaItems: [
+  
+      {
+        type: 'video',
+        src: '/videos/Kelis_Smaller.mp4',
+        previewMode: true,
+        loop: true,
+        aspectRatio: '36 / 29'
+      },
+      { type: 'image', src: '/images/Kelis_Mobile.png'},
+      { type: 'image', src: '/images/Eric_02.png'},
+      { type: 'image', src: '/images/Social_Woon01.png'},
+      { type: 'image', src: '/images/Social_Kiosk.png'},
+      { type: 'image', src: '/images/Social_Woon02.png'},
+      { type: 'image', src: '/images/Eric_03.png'},
+      { type: 'image', src: '/images/Social_TheSportsBra.png'},
+    ], 
+  },
+
+
+  {
     title: 'Broad Street Oyster x Square',
     category: 'Concept / Art Direction',
     description:
@@ -196,37 +232,7 @@ Ian Watt, BANG!`,
   },
   
 
-  {
-    title: 'The Internet',
-    category: 'Web / Interactive Design',
-    description:
-     `A selection of digital and interactive work spanning social content and web design. This includes talent-led series like Running a Restaurant is No Joke with Eric Wareheim and Only the Good Stuff with Kelis.
 
-Additional work available upon request.`,
-      credits: `Creative Direction
-Dave Brown, Monina Velarde, Jess Williams
-            
-Design
-Germaine Lau`,
-
-    mediaItems: [
-  
-      {
-        type: 'video',
-        src: '/videos/Kelis_Smaller.mp4',
-        previewMode: true,
-        loop: true,
-        aspectRatio: '36 / 29'
-      },
-      { type: 'image', src: '/images/Kelis_Mobile.png'},
-      { type: 'image', src: '/images/Eric_02.png'},
-      { type: 'image', src: '/images/Social_Woon01.png'},
-      { type: 'image', src: '/images/Social_Kiosk.png'},
-      { type: 'image', src: '/images/Social_Woon02.png'},
-      { type: 'image', src: '/images/Eric_03.png'},
-      { type: 'image', src: '/images/Social_TheSportsBra.png'},
-    ], 
-  },
  
 ];
 
