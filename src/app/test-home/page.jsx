@@ -74,7 +74,7 @@ Jennifer Bonilla, Terumi Fletcher`,
     ],
     type: 'video',
     src: '/videos/Katz_Smaller.mp4',
-    fitClass: 'object-cover object-top',
+   fitClass: 'object-cover object-[50%_20%]'
     heightClass: 'h-[46vh] min-h-[500px] min-[750px]:h-[62vh]',
     widthClass:
       'w-[78vw] min-[600px]:w-[58vw] min-[850px]:w-[36vw] min-[1200px]:w-[28vw]',
@@ -244,12 +244,12 @@ Germaine Lau
 
 Copy
 Jenn Young, Mike Grover`],
-    type: 'image',
-    src: '/images/Internet_01.png',
-    fitClass: 'object-cover object-top',
-    heightClass: 'h-[30vh] min-h-[450px] min-[750px]:h-[50vh]',
-    widthClass:
-      'w-[64vw] min-[600px]:w-[50vw] min-[850px]:w-[28vw] min-[1200px]:w-[20vw]',
+type: 'image',
+src: '/images/Internet_01.png',
+fitClass: 'object-cover object-top',
+heightClass: 'h-[24vh] min-h-[280px] min-[750px]:h-[42vh] min-[850px]:h-[50vh]',
+widthClass:
+  'w-[64vw] min-[600px]:w-[50vw] min-[850px]:w-[28vw] min-[1200px]:w-[20vw]',
     mediaItems: [
       { type: 'image', src: '/images/Eric_02.png' },
       { type: 'image', src: '/images/Social_Woon01.png' },
