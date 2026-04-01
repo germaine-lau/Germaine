@@ -74,7 +74,7 @@ Jennifer Bonilla, Terumi Fletcher`,
     ],
     type: 'video',
     src: '/videos/Katz_Smaller.mp4',
-   fitClass: 'object-cover object-[50%_20%]'
+    fitClass: 'object-cover object-[50%_20%]',
     heightClass: 'h-[46vh] min-h-[500px] min-[750px]:h-[62vh]',
     widthClass:
       'w-[78vw] min-[600px]:w-[58vw] min-[850px]:w-[36vw] min-[1200px]:w-[28vw]',
@@ -524,7 +524,6 @@ export default function TestCarouselPage() {
     removeWindowPointerListeners();
   };
 
-  So your structure should look like this
   return (
     <div
       className={`flex w-full flex-col bg-white ${
@@ -554,7 +553,34 @@ export default function TestCarouselPage() {
             style={{ overscrollBehaviorX: 'contain' }}
             aria-label="Project carousel"
           >
-            ...
+            <div className="flex w-full items-end">
+              <div
+                ref={trackRef}
+                className="flex w-max items-end gap-[12px] will-change-transform"
+              >
+                <div ref={setRef} className="flex items-end gap-[12px]">
+                  {TEST_PROJECTS.map((project) => (
+                    <CarouselAssetCard
+                      key={project.id}
+                      project={project}
+                      suppressClickRef={suppressClickRef}
+                      onOpen={handleOpenProject}
+                    />
+                  ))}
+                </div>
+  
+                <div className="flex items-end gap-[12px]">
+                  {TEST_PROJECTS.map((project) => (
+                    <CarouselAssetCard
+                      key={`${project.id}-clone`}
+                      project={project}
+                      suppressClickRef={suppressClickRef}
+                      onOpen={handleOpenProject}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
           </section>
         )}
   
@@ -572,4 +598,4 @@ export default function TestCarouselPage() {
       </div>
     </div>
   );
-}
+  }
