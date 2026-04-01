@@ -287,9 +287,7 @@ The work later helped inform Square’s Diversity in Creative guidelines.`,
     mediaItems: [  { type: 'image', src: '/images/inclusive_1.png' },
       { type: 'image', src: '/images/inclusive_4.png' },
       { type: 'image', src: '/images/inclusive_5.png' },
-      { type: 'image', src: '/images/inclusive_2.png' },
       { type: 'image', src: '/images/inclusive_7.png' },
-   
     
     ],
     modal: {
@@ -531,11 +529,12 @@ export default function TestCarouselPage() {
       }`}
     >
       <header className={`min-[850px]:pb-7 flex-shrink-0 pb-0 ${PAGE_GUTTER}`}>
-        <Header
-          logoName="germaine"
-          tagline={'multidisciplinary designer + art director \n→ based in San Francisco, CA'}
-          navItems={DEFAULT_NAV_ITEMS}
-        />
+      <Header
+  logoName="germaine"
+  tagline={'multidisciplinary designer + art director \n→ based in San Francisco, CA'}
+  navItems={DEFAULT_NAV_ITEMS}
+  onLogoClick={activeProject ? handleCloseOverlay : undefined}
+/>
       </header>
   
       <main

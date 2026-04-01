@@ -1,7 +1,8 @@
+import Link from 'next/link';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 
-function Header({ logoName, tagline, navItems, className = '' }) {
+function Header({ logoName, tagline, navItems, onLogoClick, className = '' }) {
   return (
     <header
       className={`w-full pt-7 pb-8 min-[850px]:pt-9 min-[850px]:pb-0 ${className}`}
@@ -12,7 +13,20 @@ function Header({ logoName, tagline, navItems, className = '' }) {
           <div className="min-w-0">
             <div className="flex flex-col gap-5 min-[850px]:flex-row min-[850px]:items-center min-[850px]:gap-12">
               <div className="flex flex-col gap-5">
-                <Logo />
+                {onLogoClick ? (
+                  <button
+                    type="button"
+                    onClick={onLogoClick}
+                    aria-label="Close project"
+                    className="w-fit bg-transparent p-0 text-left"
+                  >
+                    <Logo />
+                  </button>
+                ) : (
+                  <Link href="/" className="inline-block w-fit">
+                    <Logo />
+                  </Link>
+                )}
 
                 {tagline && (
                   <p className="max-w-[320px] whitespace-pre-wrap text-left font-bold text-[10.75px] leading-[1.06] tracking-[-0.1075px] text-black min-[750px]:hidden">
