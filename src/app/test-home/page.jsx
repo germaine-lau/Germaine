@@ -33,7 +33,7 @@ Michael Grover`,
     ],
     type: 'image',
     src: '/images/Brochure_Front.png',
-    fitClass: 'object-cover object-top',
+    fitClass: 'object-cover object-bottom',
     heightClass: 'h-[34vh] min-h-[380px] min-[750px]:h-[40vh]',
     widthClass:
       'w-[100vw] min-[600px]:w-[72vw] min-[850px]:w-[42vw] min-[1200px]:w-[32vw]',
@@ -534,13 +534,13 @@ export default function TestCarouselPage() {
         />
       </header>
 
-      <main className="flex w-full flex-1 flex-col">
+      <main className="flex w-full min-h-0 flex-1 flex-col">
         {!activeProject && (
-          <section
-            ref={viewportRef}
-            className={`flex w-full flex-1 items-end overflow-x-hidden overflow-y-visible select-none touch-none ${PAGE_GUTTER} ${
-              isDragging ? 'cursor-grabbing' : 'cursor-grab'
-            }`}
+         <section
+         ref={viewportRef}
+         className={`flex w-full min-h-0 flex-1 items-end overflow-x-hidden overflow-y-visible select-none touch-pan-y ${PAGE_GUTTER} ${
+           isDragging ? 'cursor-grabbing' : 'cursor-grab'
+         }`}
             onPointerDown={handlePointerDown}
             style={{ overscrollBehaviorX: 'contain' }}
             aria-label="Project carousel"
