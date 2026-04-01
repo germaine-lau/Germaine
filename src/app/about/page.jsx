@@ -8,7 +8,6 @@ import PageLayout from '@/components/PageLayout';
 
 const DEFAULT_NAV_ITEMS = [
   { label: 'about', href: '/about' },
-  { label: 'play', href: '/play' },
   { label: 'contact', href: 'mailto:hello@germainelau.com' },
   { label: 'linkedin', href: 'https://www.linkedin.com/in/germaine-lau/' },
 ];

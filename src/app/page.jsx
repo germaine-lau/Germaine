@@ -48,10 +48,7 @@ mediaItems: [
 
 The campaign nods to to the things that will always change at Katz’s while celebrating the things that never will, and it positions Square as part of that ongoing story. Spanning the Lower East Side to Delancey Station and Times Square, the work brought a neighborhood icon into a citywide presence. `, 
 
-    credits: `Creative Direction: Sean Conroy
-Design: Germaine Lau, Brandon Murray, Northy Chen
-Copy: Jonathan Skale
-Production: Jennifer Bonilla, Terumi Fletcher`,
+ 
     credits: `Creative Direction
 Sean Conroy
 

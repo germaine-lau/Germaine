@@ -16,16 +16,16 @@ body {
 
 a:hover,
 button:hover {
-  cursor: url("/smiley-hover.svg") 16 16, pointer;
+  cursor: url("/arrow-hover.svg") 16 16, pointer;
 }
 
 video {
-  cursor: url("/smiley-hover.svg") 16 16, pointer;
+  cursor: url("/arrow-hover.svg") 16 16, pointer;
 }
 
 .media-item,
 .media-item * {
-  cursor: url("/smiley-hover.svg") 16 16, pointer;
+  cursor: url("/arrow-hover.svg") 16 16, pointer;
 }
 
 /* Hide scrollbar but keep scrolling */
@@ -90,3 +90,11 @@ body {
   border: none;
 }
 
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

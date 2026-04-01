@@ -591,7 +591,9 @@ function ProjectRow({
     return (
       <div
         key={`${prefix}-${item?.src ?? 'placeholder'}-${index}`}
-        className="flex-shrink-0 overflow-hidden bg-neutral-200 text-sm text-neutral-500"
+        className={`flex-shrink-0 overflow-hidden text-sm text-neutral-500 ${
+          item.bgClass ?? 'bg-neutral-200'
+        }`}
         style={{
           height: '100%',
           width: `${itemWidth}px`,
