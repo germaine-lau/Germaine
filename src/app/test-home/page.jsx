@@ -525,7 +525,7 @@ export default function TestCarouselPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white">
+    <div className="flex h-[100dvh] w-full flex-col overflow-hidden bg-white">
       <header className={`min-[850px]:pb-7 flex-shrink-0 pb-0 ${PAGE_GUTTER}`}>
         <Header
           logoName="germaine"
@@ -534,11 +534,11 @@ export default function TestCarouselPage() {
         />
       </header>
 
-      <main className="flex w-full min-h-0 flex-1 flex-col">
+      <main className="flex min-h-0 w-full flex-1 overflow-hidden">
         {!activeProject && (
          <section
          ref={viewportRef}
-         className={`flex w-full min-h-0 flex-1 items-end overflow-x-hidden overflow-y-visible select-none touch-pan-y ${PAGE_GUTTER} ${
+         className={`flex h-full w-full min-h-0 items-end overflow-hidden select-none touch-pan-y ${PAGE_GUTTER} ${
            isDragging ? 'cursor-grabbing' : 'cursor-grab'
          }`}
             onPointerDown={handlePointerDown}
