@@ -524,8 +524,13 @@ export default function TestCarouselPage() {
     removeWindowPointerListeners();
   };
 
+  So your structure should look like this
   return (
-    <div className="flex h-[100dvh] w-full flex-col overflow-hidden bg-white">
+    <div
+      className={`flex w-full flex-col bg-white ${
+        activeProject ? 'min-h-screen' : 'h-[100dvh] overflow-hidden'
+      }`}
+    >
       <header className={`min-[850px]:pb-7 flex-shrink-0 pb-0 ${PAGE_GUTTER}`}>
         <Header
           logoName="germaine"
@@ -533,47 +538,27 @@ export default function TestCarouselPage() {
           navItems={DEFAULT_NAV_ITEMS}
         />
       </header>
-
-      <main className="flex min-h-0 w-full flex-1 overflow-hidden">
+  
+      <main
+        className={`flex w-full flex-1 ${
+          activeProject ? 'min-h-0 overflow-y-auto' : 'min-h-0 overflow-hidden'
+        }`}
+      >
         {!activeProject && (
-         <section
-         ref={viewportRef}
-         className={`flex h-full w-full min-h-0 items-end overflow-hidden select-none touch-pan-y ${PAGE_GUTTER} ${
-           isDragging ? 'cursor-grabbing' : 'cursor-grab'
-         }`}
+          <section
+            ref={viewportRef}
+            className={`flex h-full w-full min-h-0 items-end overflow-hidden select-none touch-pan-y ${PAGE_GUTTER} ${
+              isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
             onPointerDown={handlePointerDown}
             style={{ overscrollBehaviorX: 'contain' }}
             aria-label="Project carousel"
           >
-            <div className="flex w-full items-end">
-              <div ref={trackRef} className="will-change-transform flex w-max items-end gap-[12px]">
-                <div ref={setRef} className="flex items-end gap-[12px]">
-                  {TEST_PROJECTS.map((project) => (
-                    <CarouselAssetCard
-                      key={project.id}
-                      project={project}
-                      suppressClickRef={suppressClickRef}
-                      onOpen={handleOpenProject}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex items-end gap-[12px]">
-                  {TEST_PROJECTS.map((project) => (
-                    <CarouselAssetCard
-                      key={`${project.id}-clone`}
-                      project={project}
-                      suppressClickRef={suppressClickRef}
-                      onOpen={handleOpenProject}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
+            ...
           </section>
         )}
-
-        {activeProject && ( 
+  
+        {activeProject && (
           <ProjectOverlay
             key={activeProject.id}
             project={activeProject}
@@ -581,7 +566,7 @@ export default function TestCarouselPage() {
           />
         )}
       </main>
-
+  
       <div className="w-full flex-shrink-0">
         <Footer leftContent="hello@germainelau.com" rightContent="2026" />
       </div>
