@@ -54,7 +54,7 @@ Michael Grover`,
 
   {
     id: 'katzs',
-    slug: 'katz',
+    
     title: "Katz's x Square",
     category: 'Experiential / Print',
     description: `Katz’s isn’t just known for its sandwiches. It’s a neighborhood icon. I developed the winning “Time” concept, using Katz’s legacy as a lens to connect Square to the neighborhood—pairing tradition with modernity in a way that reflects both brands.

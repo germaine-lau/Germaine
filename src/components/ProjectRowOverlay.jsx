@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { PAGE_GUTTER_LEFT } from '../lib/layout';
 
-function ProjectRow({
+function ProjectRowOverlay({
   title,
   category,
   description,
@@ -97,13 +97,8 @@ function ProjectRow({
 
     let normalized = offset;
 
-    while (normalized <= -setWidth) {
-      normalized += setWidth;
-    }
-
-    while (normalized > 0) {
-      normalized -= setWidth;
-    }
+    while (normalized <= -setWidth) normalized += setWidth;
+    while (normalized > 0) normalized -= setWidth;
 
     return normalized;
   };
@@ -198,9 +193,9 @@ function ProjectRow({
   const toggleFullscreen = async (id) => {
     const video = videoRefs.current[id];
     if (!video) return;
-  
+
     const container = video.closest('[data-video-wrapper="true"]');
-  
+
     try {
       if (document.fullscreenElement) {
         await document.exitFullscreen();
@@ -229,47 +224,40 @@ function ProjectRow({
     video.defaultMuted = true;
     video.playsInline = true;
     video.autoplay = true;
+    video.loop = true;
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', 'true');
     video.setAttribute('autoplay', '');
-  };
-
-  const activateVideoWithSound = async (videoKey) => {
-    const video = videoRefs.current[videoKey];
-    if (!video) return;
-
-    try {
-      updateVideoState(videoKey, {
-        hasInteracted: true,
-        muted: false,
-        paused: false,
-      });
-
-      video.currentTime = 0;
-      video.muted = false;
-      video.defaultMuted = false;
-      video.loop = false;
-      video.playsInline = true;
-      video.setAttribute('playsinline', '');
-      video.setAttribute('webkit-playsinline', 'true');
-      video.dataset.userActivated = 'true';
-
-      await video.play();
-
-      updateVideoState(videoKey, {
-        currentTime: video.currentTime || 0,
-        duration: video.duration || 0,
-      });
-    } catch (error) {
-      console.error('Video activation failed:', error);
-    }
+    video.setAttribute('muted', '');
   };
 
   const handleVideoPrimaryClick = async (videoKey) => {
+    const video = videoRefs.current[videoKey];
+    if (!video) return;
+
     const hasInteracted = videoStates[videoKey]?.hasInteracted === true;
 
     if (!hasInteracted) {
-      await activateVideoWithSound(videoKey);
+      try {
+        video.pause();
+        video.currentTime = 0;
+        video.muted = false;
+        video.defaultMuted = false;
+        video.loop = false;
+        video.dataset.userActivated = 'true';
+
+        await video.play();
+
+        updateVideoState(videoKey, {
+          hasInteracted: true,
+          muted: false,
+          paused: false,
+          currentTime: video.currentTime || 0,
+          duration: video.duration || 0,
+        });
+      } catch (error) {
+        console.error('Video activation failed:', error);
+      }
       return;
     }
 
@@ -346,7 +334,6 @@ function ProjectRow({
     };
 
     const id = requestAnimationFrame(measureRails);
-
     window.addEventListener('resize', measureRails);
 
     const observers = [];
@@ -394,15 +381,15 @@ function ProjectRow({
       const hasInteracted = videoStates[videoKey]?.hasInteracted === true;
       const isPreviewVideo = video.dataset.previewVideo === 'true';
 
-      video.autoplay = true;
       video.playsInline = true;
       video.setAttribute('playsinline', '');
       video.setAttribute('webkit-playsinline', 'true');
-      video.setAttribute('autoplay', '');
 
       if (isPreviewVideo || !hasInteracted) {
         video.muted = true;
         video.defaultMuted = true;
+        video.loop = true;
+        video.setAttribute('muted', '');
       }
 
       if (video.paused && (isPreviewVideo || !hasInteracted)) {
@@ -431,7 +418,7 @@ function ProjectRow({
 
         if (setWidthRef.current > 0 && shouldLoopInfinitely) {
           if (dragState.current.isDragging || dragState.current.isPointerDown) {
-            // live drag controls position
+            // drag controls live position
           } else if (Math.abs(momentumRef.current.velocity) > minVelocity) {
             applyTrackOffset(
               trackRef,
@@ -524,7 +511,6 @@ function ProjectRow({
       momentumRef.current.lastTime = performance.now();
 
       suppressClickRef.current = false;
-
       viewport.setPointerCapture?.(e.pointerId);
     };
 
@@ -578,23 +564,15 @@ function ProjectRow({
       setDragging(false);
       viewport.releasePointerCapture?.(e.pointerId);
 
-      if (wasDragging) {
-        window.setTimeout(() => {
-          suppressClickRef.current = false;
-        }, 120);
-      } else {
-        window.setTimeout(() => {
-          suppressClickRef.current = false;
-        }, 0);
-      }
+      window.setTimeout(() => {
+        suppressClickRef.current = false;
+      }, wasDragging ? 120 : 0);
     };
 
     const handleWheel = (e) => {
       if (!shouldLoopInfinitely) return;
 
-      const interactiveTarget = e.target.closest(
-        'input, [data-video-controls="true"]'
-      );
+      const interactiveTarget = e.target.closest('input, [data-video-controls="true"]');
       if (interactiveTarget) return;
 
       const primaryDelta =
@@ -671,13 +649,7 @@ function ProjectRow({
         desktopViewport.removeEventListener('wheel', desktopHandlers.handleWheel);
       }
     };
-  }, [
-    shouldLoopInfinitely,
-    isDesktopViewport,
-    baseItems.length,
-    mobileHandlers.handleWheel,
-    desktopHandlers.handleWheel,
-  ]);
+  }, [shouldLoopInfinitely, isDesktopViewport, baseItems.length]);
 
   const saveImageDimensions = (src, img) => {
     if (!src || !img?.naturalWidth || !img?.naturalHeight) return;
@@ -705,10 +677,7 @@ function ProjectRow({
     const isVideo = item?.type === 'video';
     const isImage = item?.type === 'image';
     const isPreviewVideo = item?.previewMode === true;
-    const isBroadStreetProject =
-      typeof title === 'string' && title.toLowerCase().includes('broad street');
-    const isMobileForcedPreview = !isDesktopViewport && !isBroadStreetProject;
-    const shouldUsePreviewBehavior = isPreviewVideo || isMobileForcedPreview;
+    const shouldUsePreviewBehavior = isPreviewVideo;
     const hideBelowDesktop = item?.hideBelowDesktop === true;
 
     if (hideBelowDesktop && !isDesktopViewport) {
@@ -749,226 +718,226 @@ function ProjectRow({
         }}
       >
         {item?.src ? (
-         isVideo ? (
-          <div
-          className="group relative h-full w-full"
-          data-video-wrapper="true"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-            <div className="media-item h-full w-full">
-              <video
-                key={videoKey}
-                ref={(el) => {
-                  if (el) {
-                    videoRefs.current[videoKey] = el;
-                    if (shouldUsePreviewBehavior || !hasInteracted) {
-                      prepareMutedInlineVideo(el);
+          isVideo ? (
+            <div
+              className="group relative h-full w-full"
+              data-video-wrapper="true"
+              onClick={(e) => {
+                if (suppressRef.current) return;
+                e.stopPropagation();
+                handleVideoPrimaryClick(videoKey);
+              }}
+            >
+              <div className="media-item h-full w-full">
+                <video
+                  key={videoKey}
+                  ref={(el) => {
+                    if (el) {
+                      videoRefs.current[videoKey] = el;
+
+                      if (shouldUsePreviewBehavior || !hasInteracted) {
+                        prepareMutedInlineVideo(el);
+                      }
+                    } else {
+                      delete videoRefs.current[videoKey];
                     }
-                  } else {
-                    delete videoRefs.current[videoKey];
-                  }
-                }}
-                data-video-key={videoKey}
-                data-preview-video={shouldUsePreviewBehavior ? 'true' : 'false'}
-                src={item.src}
-                aria-label={item.alt ?? ''}
-                muted={shouldUsePreviewBehavior ? true : !hasInteracted}
-                playsInline
-                autoPlay
-                loop={shouldUsePreviewBehavior ? true : !hasInteracted}
-                preload="auto"
-                controls={false}
-                disablePictureInPicture
-                disableRemotePlayback
-                className="pointer-events-none block h-full w-full object-cover"
-                onLoadedMetadata={(e) => {
-                  const video = e.currentTarget;
-                  video.playsInline = true;
-                  video.setAttribute('playsinline', '');
-                  video.setAttribute('webkit-playsinline', 'true');
-        
-                  if (shouldUsePreviewBehavior || !hasInteracted) {
-                    video.muted = true;
-                    video.defaultMuted = true;
-                  }
-        
-                  if (shouldUsePreviewBehavior) {
-                    video.play().catch(() => {});
-                    return;
-                  }
-        
-                  handleVideoLoadedMetadata(videoKey);
-        
-                  updateVideoState(videoKey, {
-                    muted: video.muted,
-                    paused: video.paused,
-                    currentTime: video.currentTime || 0,
-                    duration: video.duration || 0,
-                  });
-        
-                  video.play().catch(() => {});
-                }}
-                onCanPlay={(e) => {
-                  const video = e.currentTarget;
-                  video.playsInline = true;
-                  video.setAttribute('playsinline', '');
-                  video.setAttribute('webkit-playsinline', 'true');
-        
-                  if (shouldUsePreviewBehavior || !hasInteracted) {
-                    video.muted = true;
-                    video.defaultMuted = true;
-                  }
-        
-                  if (video.paused && (shouldUsePreviewBehavior || !hasInteracted)) {
-                    video.play().catch(() => {});
-                  }
-                }}
-                onTimeUpdate={() => {
-                  if (!shouldUsePreviewBehavior) {
-                    handleVideoTimeUpdate(videoKey);
-                  }
-                }}
-                onPlay={() => {
-                  if (!shouldUsePreviewBehavior) {
-                    updateVideoState(videoKey, { paused: false });
-                  }
-                }}
-                onPause={() => {
-                  if (!shouldUsePreviewBehavior) {
+                  }}
+                  data-video-key={videoKey}
+                  data-preview-video={shouldUsePreviewBehavior ? 'true' : 'false'}
+                  src={item.src}
+                  aria-label={item.alt ?? ''}
+                  muted={shouldUsePreviewBehavior ? true : !hasInteracted}
+                  playsInline
+                  autoPlay
+                  loop={shouldUsePreviewBehavior ? true : !hasInteracted}
+                  preload="auto"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  controls={false}
+                  className="pointer-events-none block h-full w-full object-cover"
+                  onLoadedMetadata={(e) => {
+                    const video = e.currentTarget;
+
+                    video.playsInline = true;
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', 'true');
+
+                    if (shouldUsePreviewBehavior || !hasInteracted) {
+                      video.muted = true;
+                      video.defaultMuted = true;
+                      video.loop = true;
+                      video.setAttribute('muted', '');
+                      video.play().catch(() => {});
+                    }
+
+                    if (!shouldUsePreviewBehavior) {
+                      handleVideoLoadedMetadata(videoKey);
+                      updateVideoState(videoKey, {
+                        muted: video.muted,
+                        paused: video.paused,
+                        currentTime: video.currentTime || 0,
+                        duration: video.duration || 0,
+                      });
+                    }
+                  }}
+                  onCanPlay={(e) => {
+                    const video = e.currentTarget;
+
+                    if (shouldUsePreviewBehavior || !hasInteracted) {
+                      video.muted = true;
+                      video.defaultMuted = true;
+                      video.loop = true;
+
+                      if (video.paused) {
+                        video.play().catch(() => {});
+                      }
+                    }
+                  }}
+                  onTimeUpdate={() => {
+                    if (!shouldUsePreviewBehavior) {
+                      handleVideoTimeUpdate(videoKey);
+                    }
+                  }}
+                  onPlay={() => {
+                    if (!shouldUsePreviewBehavior) {
+                      updateVideoState(videoKey, {
+                        paused: false,
+                        muted: videoRefs.current[videoKey]?.muted ?? true,
+                      });
+                    }
+                  }}
+                  onPause={() => {
+                    if (!shouldUsePreviewBehavior) {
+                      updateVideoState(videoKey, { paused: true });
+                    }
+                  }}
+                  onEnded={(e) => {
+                    const video = e.currentTarget;
+
+                    if (shouldUsePreviewBehavior || !hasInteracted) {
+                      video.currentTime = 0;
+                      video.play().catch(() => {});
+                      return;
+                    }
+
                     updateVideoState(videoKey, { paused: true });
-                  }
-                }}
-                onEnded={(e) => {
-                  if (shouldUsePreviewBehavior) return;
-        
-                  const video = e.currentTarget;
-                  if (!hasInteracted) {
-                    video.currentTime = 0;
-                    video.play().catch(() => {});
-                  }
-                }}
-                onError={(e) => {
-                  const video = e.currentTarget;
-                  video.load();
-                }}
-              />
-            </div>
-        
-            {!shouldUsePreviewBehavior && (
-              <>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-        
-                <div className="pointer-events-none absolute inset-0 z-10 opacity-80 transition-opacity duration-200 group-hover:opacity-100">
-                  <div className="absolute bottom-0 left-0 right-0 px-3 pb-2">
-                    <div
-                      data-video-controls="true"
-                      className="pointer-events-auto flex items-center gap-3 text-white"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => handleVideoPrimaryClick(videoKey)}
-                        className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                        aria-label={
-                          videoStates[videoKey]?.paused === false
-                            ? 'Pause video'
-                            : 'Play video'
-                        }
+                  }}
+                />
+              </div>
+
+              {!shouldUsePreviewBehavior && (
+                <>
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+
+                  <div className="pointer-events-none absolute inset-0 z-10 opacity-80 transition-opacity duration-200 group-hover:opacity-100">
+                    <div className="absolute bottom-0 left-0 right-0 px-3 pb-2">
+                      <div
+                        data-video-controls="true"
+                        className="pointer-events-auto flex items-center gap-3 text-white"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        {videoStates[videoKey]?.paused === false ? (
-                          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-                            <rect x="6" y="5" width="4" height="14" />
-                            <rect x="14" y="5" width="4" height="14" />
-                          </svg>
-                        ) : (
-                          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-                            <polygon points="8,5 19,12 8,19" />
-                          </svg>
-                        )}
-                      </button>
-        
-                      <span className="min-w-[72px] text-[11px] leading-none text-white">
-                        {formatTime(videoStates[videoKey]?.currentTime || 0)} /{' '}
-                        {formatTime(videoStates[videoKey]?.duration || 0)}
-                      </span>
-        
-                      <input
-                        type="range"
-                        min="0"
-                        max={videoStates[videoKey]?.duration || 0}
-                        step="0.1"
-                        value={videoStates[videoKey]?.currentTime || 0}
-                        onChange={(e) => handleScrub(videoKey, e.target.value)}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        className="video-slider h-[3px] w-full cursor-pointer"
-                        aria-label="Video progress"
-                      />
-        
-                      <button
-                        type="button"
-                        onClick={() => toggleMute(videoKey)}
-                        className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                        aria-label={
-                          videoStates[videoKey]?.muted
-                            ? 'Turn sound on'
-                            : 'Turn sound off'
-                        }
-                      >
-                        {videoStates[videoKey]?.muted ? (
-                          <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                            <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
-                            <path d="M16 9l5 5" stroke="currentColor" strokeWidth="2" />
-                            <path d="M21 9l-5 5" stroke="currentColor" strokeWidth="2" />
-                          </svg>
-                        ) : (
-                          <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                            <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
-                            <path
-                              d="M16.5 9.5a4.5 4.5 0 0 1 0 5"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                            />
-                            <path
-                              d="M18.5 7a8 8 0 0 1 0 10"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                        )}
-                      </button>
-        
-                      <button
-                        type="button"
-                        onClick={() => toggleFullscreen(videoKey)}
-                        className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                        aria-label="Toggle fullscreen"
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          className="h-4 w-4"
-                          aria-hidden="true"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                        <button
+                          type="button"
+                          onClick={() => handleVideoPrimaryClick(videoKey)}
+                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                          aria-label={
+                            videoStates[videoKey]?.paused === false
+                              ? 'Pause video'
+                              : 'Play video'
+                          }
                         >
-                          <path d="M8 3H3v5" />
-                          <path d="M16 3h5v5" />
-                          <path d="M21 16v5h-5" />
-                          <path d="M8 21H3v-5" />
-                        </svg>
-                      </button>
+                          {videoStates[videoKey]?.paused === false ? (
+                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                              <rect x="6" y="5" width="4" height="14" />
+                              <rect x="14" y="5" width="4" height="14" />
+                            </svg>
+                          ) : (
+                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                              <polygon points="8,5 19,12 8,19" />
+                            </svg>
+                          )}
+                        </button>
+
+                        <span className="min-w-[72px] text-[11px] leading-none text-white">
+                          {formatTime(videoStates[videoKey]?.currentTime || 0)} /{' '}
+                          {formatTime(videoStates[videoKey]?.duration || 0)}
+                        </span>
+
+                        <input
+                          type="range"
+                          min="0"
+                          max={videoStates[videoKey]?.duration || 0}
+                          step="0.1"
+                          value={videoStates[videoKey]?.currentTime || 0}
+                          onChange={(e) => handleScrub(videoKey, e.target.value)}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          className="video-slider h-[3px] w-full cursor-pointer"
+                          aria-label="Video progress"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => toggleMute(videoKey)}
+                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                          aria-label={
+                            videoStates[videoKey]?.muted
+                              ? 'Turn sound on'
+                              : 'Turn sound off'
+                          }
+                        >
+                          {videoStates[videoKey]?.muted ? (
+                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
+                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
+                              <path d="M16 9l5 5" stroke="currentColor" strokeWidth="2" />
+                              <path d="M21 9l-5 5" stroke="currentColor" strokeWidth="2" />
+                            </svg>
+                          ) : (
+                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
+                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
+                              <path
+                                d="M16.5 9.5a4.5 4.5 0 0 1 0 5"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                              />
+                              <path
+                                d="M18.5 7a8 8 0 0 1 0 10"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                              />
+                            </svg>
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => toggleFullscreen(videoKey)}
+                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                          aria-label="Toggle fullscreen"
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            className="h-4 w-4"
+                            aria-hidden="true"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M8 3H3v5" />
+                            <path d="M16 3h5v5" />
+                            <path d="M21 16v5h-5" />
+                            <path d="M8 21H3v-5" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </div>
           ) : isImage ? (
             <div className={`h-full w-full ${item.innerClass ?? ''}`}>
               <img
@@ -1018,7 +987,7 @@ function ProjectRow({
       className={`w-full pb-12 pt-6 min-[750px]:pb-32 min-[750px]:pt-7 min-[850px]:grid min-[850px]:grid-cols-[360px,minmax(0,1fr)] min-[850px]:items-stretch min-[850px]:gap-[64px] min-[850px]:pt-[28px] last:pb-8 min-[750px]:last:pb-0 ${className}`}
       aria-labelledby={projectId}
     >
-      <div className="min-w-0 min-[850px]:order-2">
+           <div className="min-w-0 min-[850px]:order-2 min-[850px]:pt-10 min-[1200px]:pt-5">
         {!isDesktopViewport ? (
           <div
             className={
@@ -1034,7 +1003,7 @@ function ProjectRow({
               onPointerMove={mobileHandlers.handlePointerMove}
               onPointerUp={mobileHandlers.handlePointerUp}
               onPointerCancel={mobileHandlers.handlePointerCancel}
-              className={`h-[280px] overflow-hidden min-[750px]:h-[491px] ${
+              className={`overflow-hidden ${
                 disableCarousel ? `${PAGE_GUTTER_LEFT}` : ''
               } ${shouldLoopInfinitely ? 'select-none' : ''} ${
                 shouldLoopInfinitely
@@ -1044,6 +1013,7 @@ function ProjectRow({
                   : ''
               }`}
               style={{
+                height: 'clamp(240px, calc(100vh - 420px), 280px)',
                 touchAction: shouldLoopInfinitely ? 'pan-y' : 'auto',
                 overscrollBehaviorX: 'contain',
               }}
@@ -1066,7 +1036,7 @@ function ProjectRow({
               onPointerMove={desktopHandlers.handlePointerMove}
               onPointerUp={desktopHandlers.handlePointerUp}
               onPointerCancel={desktopHandlers.handlePointerCancel}
-              className={`h-[491px] overflow-hidden ${
+              className={`overflow-hidden ${
                 shouldLoopInfinitely ? 'select-none' : ''
               } ${
                 shouldLoopInfinitely
@@ -1076,6 +1046,7 @@ function ProjectRow({
                   : ''
               }`}
               style={{
+                height: '68vh',
                 touchAction: shouldLoopInfinitely ? 'pan-y' : 'auto',
                 overscrollBehaviorX: 'contain',
               }}
@@ -1087,7 +1058,12 @@ function ProjectRow({
       </div>
 
       <div className={`mt-7 ${PAGE_GUTTER_LEFT} min-[850px]:order-1 min-[850px]:mt-[6px]`}>
-        <div className="flex flex-col gap-8 min-[850px]:h-full min-[850px]:min-h-[491px] min-[850px]:justify-start min-[850px]:pb-10">
+        <div
+          className="flex flex-col gap-8 min-[850px]:h-full min-[850px]:justify-start min-[850px]:pb-10"
+          style={{
+            minHeight: isDesktopViewport ? '68vh' : undefined,
+          }}
+        >
           <div className="flex flex-col gap-3 min-[750px]:gap-[14px]">
             {title && (
               <h2
@@ -1131,4 +1107,4 @@ function ProjectRow({
   );
 }
 
-export default ProjectRow;
+export default ProjectRowOverlay;
