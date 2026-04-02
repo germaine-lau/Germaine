@@ -1,6 +1,7 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProjectRowOverlay from '@/components/ProjectRowOverlay';
+import ProjectMediaColumn from '@/components/ProjectMediaColumn';
 import { PAGE_GUTTER } from '@/lib/layout';
 
 const DEFAULT_NAV_ITEMS = [
@@ -30,12 +31,6 @@ Jonathan Skale
 Production
 Jennifer Bonilla, Terumi Fletcher`,
   ],
-  type: 'video',
-  src: '/videos/katz_vertical_thumbnail.mp4',
-  fitClass: 'object-cover object-[50%_20%]',
-  heightClass: 'h-[46vh] min-h-[500px] min-[750px]:h-[62vh]',
-  widthClass:
-    'w-[78vw] min-[600px]:w-[58vw] min-[850px]:w-[36vw] min-[1200px]:w-[28vw]',
   mediaItems: [
     {
       type: 'video',
@@ -43,17 +38,35 @@ Jennifer Bonilla, Terumi Fletcher`,
       aspectRatio: '16 / 9',
       loop: true,
     },
-    { type: 'image', src: '/images/TimesChange_01.png' },
-    { type: 'image', src: '/images/000001440034.jpg' },
-    { type: 'image', src: '/images/Faregates.png' },
-    { type: 'image', src: '/images/000001440019.jpg' },
+    { type: 'image', src: '/images/TimesChange_01.png', aspectRatio: '1 / 1' },
+    { type: 'image', src: '/images/000001440034.jpg', aspectRatio: '3 / 4' },
+    { type: 'image', src: '/images/Faregates.png', aspectRatio: '16 / 9' },
+    { type: 'image', src: '/images/000001440019.jpg', aspectRatio: '3 / 4' },
     { type: 'image', src: '/images/TimesChange_03.png' },
     { type: 'image', src: '/images/000001440025.jpg' },
     { type: 'image', src: '/images/TimesChange_02.png' },
     { type: 'image', src: '/images/000001450017.jpg' },
   ],
-  modal: {},
 };
+
+function CreditsBlock({ credits }) {
+  if (!credits) return null;
+
+  return (
+    <div className="mt-10 flex flex-col gap-3 min-[750px]:gap-[12px]">
+      <div className="w-fit rounded-[18px] border border-black px-[8px] py-[2.25px] font-arial text-[10px] leading-[1.2] tracking-[.1] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.1]">
+        Credits
+      </div>
+
+      <p
+        className="max-w-[220px] whitespace-pre-wrap font-arial text-[11px] leading-[1.35] tracking-[.1px] text-black min-[750px]:max-w-[220px] min-[750px]:text-[9px] min-[750px]:leading-[1.26]"
+        dangerouslySetInnerHTML={{
+          __html: Array.isArray(credits) ? credits[0] : credits,
+        }}
+      />
+    </div>
+  );
+}
 
 export default async function ProjectPage({ params }) {
   const { slug } = await params;
@@ -63,8 +76,9 @@ export default async function ProjectPage({ params }) {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white">
-<header className={`min-[850px]:pb-7 flex-shrink-0 pb-0 border-b border-black ${PAGE_GUTTER}`}>
+    <div className="min-h-screen w-full bg-white text-black">
+      {/* MOBILE / TABLET HEADER */}
+      <header className={`border-b border-black pb-0 min-[850px]:hidden ${PAGE_GUTTER}`}>
         <Header
           logoName="germaine"
           tagline={'multidisciplinary designer + art director \n→ based in San Francisco, CA'}
@@ -72,13 +86,62 @@ export default async function ProjectPage({ params }) {
         />
       </header>
 
-      <main className="flex w-full flex-1 min-h-0 overflow-y-auto">
-        <div className="w-full">
-          <ProjectRowOverlay {...KATZ_PROJECT} />
-        </div>
+      {/* DESKTOP FIXED HEADER */}
+      <header
+        className={`hidden min-[850px]:fixed min-[850px]:inset-x-0 min-[850px]:top-0 min-[850px]:z-50 min-[850px]:block min-[850px]:border-b min-[850px]:border-black min-[850px]:bg-white min-[850px]:pb-7 ${PAGE_GUTTER}`}
+      >
+        <Header
+          logoName="germaine"
+          tagline={'multidisciplinary designer + art director \n→ based in San Francisco, CA'}
+          navItems={DEFAULT_NAV_ITEMS}
+        />
+      </header>
+
+      {/* MOBILE / TABLET LAYOUT */}
+      <main className="min-[850px]:hidden">
+        <ProjectRowOverlay {...KATZ_PROJECT} />
       </main>
 
-      <div className="w-full flex-shrink-0">
+      {/* DESKTOP LAYOUT */}
+      <main className="hidden min-[850px]:block min-[850px]:w-full min-[850px]:pt-[160px] min-[850px]:pb-[56px]">
+        <section
+          className={`${PAGE_GUTTER} min-[850px]:grid min-[850px]:grid-cols-[260px,minmax(0,1fr)] min-[850px]:gap-[36px] min-[1200px]:grid-cols-[280px,minmax(0,1fr)] min-[1200px]:gap-[44px]`}
+        >
+          <aside className="min-[850px]:relative">
+            <div className="min-[850px]:fixed min-[850px]:top-[190px] min-[850px]:w-[260px] min-[1200px]:w-[280px]">
+              <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-3 min-[750px]:gap-[14px]">
+                  <h1 className="max-w-[300px] font-weird-serif text-[2.5rem] italic leading-[1.02] tracking-[-0.01em] text-black min-[750px]:text-[35px]">
+                    {KATZ_PROJECT.title}
+                  </h1>
+
+                  <p className="font-arial font-semibold text-[11px] leading-[1.35] tracking-[.1px] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.26]">
+                    {KATZ_PROJECT.category}
+                  </p>
+
+                  <p className="max-w-[300px] whitespace-pre-line font-arial text-[13px] leading-[1.35] text-black min-[750px]:max-w-[240px] min-[750px]:text-[10px] min-[750px]:leading-[1.25]">
+                    {KATZ_PROJECT.description}
+                  </p>
+                </div>
+
+                <CreditsBlock credits={KATZ_PROJECT.credits} />
+              </div>
+            </div>
+          </aside>
+
+          <div>
+            <ProjectMediaColumn mediaItems={KATZ_PROJECT.mediaItems} />
+          </div>
+        </section>
+      </main>
+
+      {/* MOBILE / TABLET FOOTER */}
+      <div className="border-t border-black min-[850px]:hidden">
+        <Footer leftContent="hello@germainelau.com" rightContent="2026" />
+      </div>
+
+      {/* DESKTOP FIXED FOOTER */}
+      <div className="hidden min-[850px]:fixed min-[850px]:inset-x-0 min-[850px]:bottom-0 min-[850px]:z-50 min-[850px]:block min-[850px]:bg-white">
         <Footer leftContent="hello@germainelau.com" rightContent="2026" />
       </div>
     </div>

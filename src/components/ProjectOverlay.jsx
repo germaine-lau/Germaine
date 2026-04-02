@@ -22,8 +22,8 @@ export default function ProjectOverlay({ project, onClose }) {
   if (!project) return null;
 
   return (
-    <div className="flex h-full w-full flex-1 flex-col overflow-hidden border-t border-black bg-white">
-      <div className="relative flex-1 overflow-hidden">
+<div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden border-t border-black bg-white">
+<div className="relative min-h-0 flex-1 overflow-hidden">
         <button
           type="button"
           onClick={onClose}
@@ -40,7 +40,7 @@ export default function ProjectOverlay({ project, onClose }) {
           />
         </button>
 
-        <div className="h-full w-full overflow-hidden px-0 pt-8 min-[750px]:pt-1">
+        <div className="h-full min-h-0 w-full overflow-hidden px-0 pt-8 min-[750px]:pt-1">
           <ProjectRowOverlay
             title={project.title}
             category={project.category}

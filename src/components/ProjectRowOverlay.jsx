@@ -733,9 +733,10 @@ function ProjectRowOverlay({
                 handleVideoPrimaryClick(videoKey);
               }}
             >
-              <div
-                className={`relative h-full w-full ${item.frameClass ?? ''} ${item.innerClass ?? ''}`}
-              >
+<div
+  className={`relative h-full w-full overflow-hidden ${item.frameClass ?? ''} ${item.innerClass ?? ''}`}
+  style={{ transform: 'translateZ(0)' }}
+>
                 <video
                   key={videoKey}
                   ref={(el) => {
@@ -764,6 +765,10 @@ function ProjectRowOverlay({
                   className={`pointer-events-none block h-full w-full ${
                     item.fitClass ?? 'object-cover'
                   } ${item.className ?? ''}`}
+                  style={{
+                    transform: 'scale(1.01)',
+                    backfaceVisibility: 'hidden',
+                  }}
                   onLoadedMetadata={(e) => {
                     const video = e.currentTarget;
 
@@ -837,7 +842,7 @@ function ProjectRowOverlay({
                   <>
                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
-                    <div className="pointer-events-none absolute inset-0 z-10 opacity-80 transition-opacity duration-200 group-hover:opacity-100">
+                   <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden opacity-80 transition-opacity duration-200 group-hover:opacity-100">
                     <div className="absolute bottom-2 left-0 right-0 px-3">
                         <div
                           data-video-controls="true"
