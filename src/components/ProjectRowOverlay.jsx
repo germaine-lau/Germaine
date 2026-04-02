@@ -198,12 +198,14 @@ function ProjectRow({
   const toggleFullscreen = async (id) => {
     const video = videoRefs.current[id];
     if (!video) return;
-
+  
+    const container = video.closest('[data-video-wrapper="true"]');
+  
     try {
       if (document.fullscreenElement) {
         await document.exitFullscreen();
       } else {
-        await video.requestFullscreen();
+        await (container || video).requestFullscreen();
       }
     } catch (error) {
       console.error('Fullscreen error:', error);
@@ -264,13 +266,14 @@ function ProjectRow({
   };
 
   const handleVideoPrimaryClick = async (videoKey) => {
-    const hasInteracted = videoStates[videoKey]?.hasInteracted;
+    const hasInteracted = videoStates[videoKey]?.hasInteracted === true;
 
     if (!hasInteracted) {
       await activateVideoWithSound(videoKey);
-    } else {
-      await togglePlayPause(videoKey);
+      return;
     }
+
+    await togglePlayPause(videoKey);
   };
 
   useEffect(() => {
@@ -419,7 +422,7 @@ function ProjectRow({
       lastTimeRef,
     }) => {
       const friction = 0.94;
-      const minVelocity = 4; // px/sec
+      const minVelocity = 4;
 
       const animate = (time) => {
         if (!lastTimeRef.current) lastTimeRef.current = time;
@@ -550,7 +553,7 @@ function ProjectRow({
 
       if (dt > 0) {
         const deltaX = e.clientX - momentumRef.current.lastX;
-        momentumRef.current.velocity = deltaX / dt; // px/sec
+        momentumRef.current.velocity = deltaX / dt;
       }
 
       momentumRef.current.lastX = e.clientX;
@@ -746,250 +749,238 @@ function ProjectRow({
         }}
       >
         {item?.src ? (
-          isVideo ? (
-            <div
-              className="group relative h-full w-full"
-              onClick={(e) => {
-                e.stopPropagation();
-
-                if (suppressRef.current) return;
-
-                const video = videoRefs.current[videoKey];
-                if (!video) return;
-
-                if (shouldUsePreviewBehavior) {
-                  prepareMutedInlineVideo(video);
-                  video.play().catch(() => {});
-                  return;
-                }
-
-                handleVideoPrimaryClick(videoKey);
-              }}
-            >
-              <div className="media-item h-full w-full">
-                <video
-                  key={videoKey}
-                  ref={(el) => {
-                    if (el) {
-                      videoRefs.current[videoKey] = el;
-                      if (shouldUsePreviewBehavior || !hasInteracted) {
-                        prepareMutedInlineVideo(el);
-                      }
-                    } else {
-                      delete videoRefs.current[videoKey];
-                    }
-                  }}
-                  data-video-key={videoKey}
-                  data-preview-video={shouldUsePreviewBehavior ? 'true' : 'false'}
-                  src={item.src}
-                  aria-label={item.alt ?? ''}
-                  muted={shouldUsePreviewBehavior ? true : !hasInteracted}
-                  playsInline
-                  autoPlay
-                  loop={shouldUsePreviewBehavior ? true : !hasInteracted}
-                  preload="auto"
-                  controls={false}
-                  disablePictureInPicture
-                  disableRemotePlayback
-                  className="pointer-events-none block h-full w-full object-cover"
-                  onLoadedMetadata={(e) => {
-                    const video = e.currentTarget;
-                    video.playsInline = true;
-                    video.setAttribute('playsinline', '');
-                    video.setAttribute('webkit-playsinline', 'true');
-
+         isVideo ? (
+          <div
+          className="group relative h-full w-full"
+          data-video-wrapper="true"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+            <div className="media-item h-full w-full">
+              <video
+                key={videoKey}
+                ref={(el) => {
+                  if (el) {
+                    videoRefs.current[videoKey] = el;
                     if (shouldUsePreviewBehavior || !hasInteracted) {
-                      video.muted = true;
-                      video.defaultMuted = true;
+                      prepareMutedInlineVideo(el);
                     }
-
-                    if (shouldUsePreviewBehavior) {
-                      video.play().catch(() => {});
-                      return;
-                    }
-
-                    handleVideoLoadedMetadata(videoKey);
-
-                    updateVideoState(videoKey, {
-                      muted: video.muted,
-                      paused: video.paused,
-                      currentTime: video.currentTime || 0,
-                      duration: video.duration || 0,
-                    });
-
+                  } else {
+                    delete videoRefs.current[videoKey];
+                  }
+                }}
+                data-video-key={videoKey}
+                data-preview-video={shouldUsePreviewBehavior ? 'true' : 'false'}
+                src={item.src}
+                aria-label={item.alt ?? ''}
+                muted={shouldUsePreviewBehavior ? true : !hasInteracted}
+                playsInline
+                autoPlay
+                loop={shouldUsePreviewBehavior ? true : !hasInteracted}
+                preload="auto"
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
+                className="pointer-events-none block h-full w-full object-cover"
+                onLoadedMetadata={(e) => {
+                  const video = e.currentTarget;
+                  video.playsInline = true;
+                  video.setAttribute('playsinline', '');
+                  video.setAttribute('webkit-playsinline', 'true');
+        
+                  if (shouldUsePreviewBehavior || !hasInteracted) {
+                    video.muted = true;
+                    video.defaultMuted = true;
+                  }
+        
+                  if (shouldUsePreviewBehavior) {
                     video.play().catch(() => {});
-                  }}
-                  onCanPlay={(e) => {
-                    const video = e.currentTarget;
-                    video.playsInline = true;
-                    video.setAttribute('playsinline', '');
-                    video.setAttribute('webkit-playsinline', 'true');
-
-                    if (shouldUsePreviewBehavior || !hasInteracted) {
-                      video.muted = true;
-                      video.defaultMuted = true;
-                    }
-
-                    if (video.paused && (shouldUsePreviewBehavior || !hasInteracted)) {
-                      video.play().catch(() => {});
-                    }
-                  }}
-                  onTimeUpdate={() => {
-                    if (!shouldUsePreviewBehavior) {
-                      handleVideoTimeUpdate(videoKey);
-                    }
-                  }}
-                  onPlay={() => {
-                    if (!shouldUsePreviewBehavior) {
-                      updateVideoState(videoKey, { paused: false });
-                    }
-                  }}
-                  onPause={() => {
-                    if (!shouldUsePreviewBehavior) {
-                      updateVideoState(videoKey, { paused: true });
-                    }
-                  }}
-                  onEnded={(e) => {
-                    if (shouldUsePreviewBehavior) return;
-
-                    const video = e.currentTarget;
-                    if (!hasInteracted) {
-                      video.currentTime = 0;
-                      video.play().catch(() => {});
-                    }
-                  }}
-                  onError={(e) => {
-                    const video = e.currentTarget;
-                    video.load();
-                  }}
-                />
-              </div>
-
-              {!shouldUsePreviewBehavior && (
-                <>
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-
-                  <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                    <div className="absolute bottom-0 left-0 right-0 px-3 pb-2">
-                      <div
-                        data-video-controls="true"
-                        className="pointer-events-auto flex items-center gap-3 text-white"
-                        onClick={(e) => e.stopPropagation()}
+                    return;
+                  }
+        
+                  handleVideoLoadedMetadata(videoKey);
+        
+                  updateVideoState(videoKey, {
+                    muted: video.muted,
+                    paused: video.paused,
+                    currentTime: video.currentTime || 0,
+                    duration: video.duration || 0,
+                  });
+        
+                  video.play().catch(() => {});
+                }}
+                onCanPlay={(e) => {
+                  const video = e.currentTarget;
+                  video.playsInline = true;
+                  video.setAttribute('playsinline', '');
+                  video.setAttribute('webkit-playsinline', 'true');
+        
+                  if (shouldUsePreviewBehavior || !hasInteracted) {
+                    video.muted = true;
+                    video.defaultMuted = true;
+                  }
+        
+                  if (video.paused && (shouldUsePreviewBehavior || !hasInteracted)) {
+                    video.play().catch(() => {});
+                  }
+                }}
+                onTimeUpdate={() => {
+                  if (!shouldUsePreviewBehavior) {
+                    handleVideoTimeUpdate(videoKey);
+                  }
+                }}
+                onPlay={() => {
+                  if (!shouldUsePreviewBehavior) {
+                    updateVideoState(videoKey, { paused: false });
+                  }
+                }}
+                onPause={() => {
+                  if (!shouldUsePreviewBehavior) {
+                    updateVideoState(videoKey, { paused: true });
+                  }
+                }}
+                onEnded={(e) => {
+                  if (shouldUsePreviewBehavior) return;
+        
+                  const video = e.currentTarget;
+                  if (!hasInteracted) {
+                    video.currentTime = 0;
+                    video.play().catch(() => {});
+                  }
+                }}
+                onError={(e) => {
+                  const video = e.currentTarget;
+                  video.load();
+                }}
+              />
+            </div>
+        
+            {!shouldUsePreviewBehavior && (
+              <>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+        
+                <div className="pointer-events-none absolute inset-0 z-10 opacity-80 transition-opacity duration-200 group-hover:opacity-100">
+                  <div className="absolute bottom-0 left-0 right-0 px-3 pb-2">
+                    <div
+                      data-video-controls="true"
+                      className="pointer-events-auto flex items-center gap-3 text-white"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleVideoPrimaryClick(videoKey)}
+                        className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                        aria-label={
+                          videoStates[videoKey]?.paused === false
+                            ? 'Pause video'
+                            : 'Play video'
+                        }
                       >
-                        <button
-                          type="button"
-                          onClick={() => handleVideoPrimaryClick(videoKey)}
-                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                          aria-label={
-                            videoStates[videoKey]?.paused === false
-                              ? 'Pause video'
-                              : 'Play video'
-                          }
-                        >
-                          {videoStates[videoKey]?.paused === false ? (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-                              <rect x="6" y="5" width="4" height="14" />
-                              <rect x="14" y="5" width="4" height="14" />
-                            </svg>
-                          ) : (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-                              <polygon points="8,5 19,12 8,19" />
-                            </svg>
-                          )}
-                        </button>
-
-                        <span className="min-w-[72px] text-[11px] leading-none text-white">
-                          {formatTime(videoStates[videoKey]?.currentTime || 0)} /{' '}
-                          {formatTime(videoStates[videoKey]?.duration || 0)}
-                        </span>
-
-                        <input
-                          type="range"
-                          min="0"
-                          max={videoStates[videoKey]?.duration || 0}
-                          step="0.1"
-                          value={videoStates[videoKey]?.currentTime || 0}
-                          onChange={(e) => handleScrub(videoKey, e.target.value)}
-                          onMouseDown={(e) => e.stopPropagation()}
-                          className="video-slider h-[3px] w-full cursor-pointer"
-                          aria-label="Video progress"
-                        />
-
-                        <button
-                          type="button"
-                          onClick={() => toggleMute(videoKey)}
-                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                          aria-label={
-                            videoStates[videoKey]?.muted
-                              ? 'Turn sound on'
-                              : 'Turn sound off'
-                          }
-                        >
-                          {videoStates[videoKey]?.muted ? (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
-                              <path d="M16 9l5 5" stroke="currentColor" strokeWidth="2" />
-                              <path d="M21 9l-5 5" stroke="currentColor" strokeWidth="2" />
-                            </svg>
-                          ) : (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
-                              <path
-                                d="M16.5 9.5a4.5 4.5 0 0 1 0 5"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                              />
-                              <path
-                                d="M18.5 7a8 8 0 0 1 0 10"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                              />
-                            </svg>
-                          )}
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => toggleFullscreen(videoKey)}
-                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                          aria-label="Toggle fullscreen"
-                        >
-                          <svg
-                            viewBox="0 0 24 24"
-                            className="h-4 w-4"
-                            aria-hidden="true"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M8 3H3v5" />
-                            <path d="M16 3h5v5" />
-                            <path d="M21 16v5h-5" />
-                            <path d="M8 21H3v-5" />
+                        {videoStates[videoKey]?.paused === false ? (
+                          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                            <rect x="6" y="5" width="4" height="14" />
+                            <rect x="14" y="5" width="4" height="14" />
                           </svg>
-                        </button>
-                      </div>
+                        ) : (
+                          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                            <polygon points="8,5 19,12 8,19" />
+                          </svg>
+                        )}
+                      </button>
+        
+                      <span className="min-w-[72px] text-[11px] leading-none text-white">
+                        {formatTime(videoStates[videoKey]?.currentTime || 0)} /{' '}
+                        {formatTime(videoStates[videoKey]?.duration || 0)}
+                      </span>
+        
+                      <input
+                        type="range"
+                        min="0"
+                        max={videoStates[videoKey]?.duration || 0}
+                        step="0.1"
+                        value={videoStates[videoKey]?.currentTime || 0}
+                        onChange={(e) => handleScrub(videoKey, e.target.value)}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        className="video-slider h-[3px] w-full cursor-pointer"
+                        aria-label="Video progress"
+                      />
+        
+                      <button
+                        type="button"
+                        onClick={() => toggleMute(videoKey)}
+                        className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                        aria-label={
+                          videoStates[videoKey]?.muted
+                            ? 'Turn sound on'
+                            : 'Turn sound off'
+                        }
+                      >
+                        {videoStates[videoKey]?.muted ? (
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
+                            <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
+                            <path d="M16 9l5 5" stroke="currentColor" strokeWidth="2" />
+                            <path d="M21 9l-5 5" stroke="currentColor" strokeWidth="2" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
+                            <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
+                            <path
+                              d="M16.5 9.5a4.5 4.5 0 0 1 0 5"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                            <path
+                              d="M18.5 7a8 8 0 0 1 0 10"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        )}
+                      </button>
+        
+                      <button
+                        type="button"
+                        onClick={() => toggleFullscreen(videoKey)}
+                        className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                        aria-label="Toggle fullscreen"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4"
+                          aria-hidden="true"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M8 3H3v5" />
+                          <path d="M16 3h5v5" />
+                          <path d="M21 16v5h-5" />
+                          <path d="M8 21H3v-5" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                </>
-              )}
-            </div>
+                </div>
+              </>
+            )}
+          </div>
           ) : isImage ? (
             <div className={`h-full w-full ${item.innerClass ?? ''}`}>
-           <img
-  src={item.src}
-  alt={item.alt ?? ''}
-  draggable={false}
-  onLoad={(e) => saveImageDimensions(item.src, e.currentTarget)}
-  className={`pointer-events-none block h-full w-full ${
-    item.fitClass ?? 'object-cover object-top'
-  } ${item?.className ?? ''}`}
-/>
-          </div>
+              <img
+                src={item.src}
+                alt={item.alt ?? ''}
+                draggable={false}
+                onLoad={(e) => saveImageDimensions(item.src, e.currentTarget)}
+                className={`pointer-events-none block h-full w-full ${
+                  item.fitClass ?? 'object-cover object-top'
+                } ${item?.className ?? ''}`}
+              />
+            </div>
           ) : null
         ) : (
           <div className="flex h-full w-full items-center justify-center">

@@ -54,6 +54,7 @@ Michael Grover`,
 
   {
     id: 'katzs',
+    slug: 'katz',
     title: "Katz's x Square",
     category: 'Experiential / Print',
     description: `Katz’s isn’t just known for its sandwiches. It’s a neighborhood icon. I developed the winning “Time” concept, using Katz’s legacy as a lens to connect Square to the neighborhood—pairing tradition with modernity in a way that reflects both brands.
@@ -73,7 +74,7 @@ Production
 Jennifer Bonilla, Terumi Fletcher`,
     ],
     type: 'video',
-    src: '/videos/Katz_Smaller.mp4',
+    src: '/videos/katz_vertical_thumbnail.mp4',
     fitClass: 'object-cover object-[50%_20%]',
     heightClass: 'h-[46vh] min-h-[500px] min-[750px]:h-[62vh]',
     widthClass:
@@ -81,9 +82,8 @@ Jennifer Bonilla, Terumi Fletcher`,
     mediaItems: [
       {
         type: 'video',
-        src: '/videos/Katz_Smaller.mp4',
+        src: '/videos/CP_Square_Katz_HERO_V3_260207_FINAL_CC_MIX_CAPTIONS.mp4',
         aspectRatio: '16 / 9',
-        previewMode: true,
         loop: true,
       },
       { type: 'image', src: '/images/TimesChange_01.png' },
@@ -561,12 +561,12 @@ export default function TestCarouselPage() {
               >
                 <div ref={setRef} className="flex items-end gap-[12px]">
                   {TEST_PROJECTS.map((project) => (
-                    <CarouselAssetCard
-                      key={project.id}
-                      project={project}
-                      suppressClickRef={suppressClickRef}
-                      onOpen={handleOpenProject}
-                    />
+                 <CarouselAssetCard
+                 key={project.id}
+                 project={project}
+                 suppressClickRef={suppressClickRef}
+                 onOpen={handleOpenProject}
+               />
                   ))}
                 </div>
   

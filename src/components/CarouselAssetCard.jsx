@@ -1,6 +1,27 @@
 'use client';
 
-function ProjectMedia({ project, altOverride = null }) {
+import { useRef } from 'react';
+
+function ProjectMedia({
+  project,
+  altOverride = null,
+  clickToToggleVideo = false,
+}) {
+  const videoRef = useRef(null);
+
+  const handleVideoClick = () => {
+    if (!clickToToggleVideo || project.type !== 'video') return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  };
+
   return (
     <div
       className={`${project.heightClass} relative overflow-hidden bg-neutral-200 transition-opacity duration-200 ease-out group-hover:opacity-80`}
@@ -8,15 +29,19 @@ function ProjectMedia({ project, altOverride = null }) {
       <div className={`h-full w-full ${project.innerClass ?? ''}`}>
         {project.type === 'video' ? (
           <video
+            ref={videoRef}
             src={project.src}
-            className={`pointer-events-none block h-full w-full select-none ${
+            className={`block h-full w-full select-none ${
               project.fitClass ?? 'object-cover'
-            } ${project.objectPositionClass ?? 'object-center'}`}
+            } ${project.objectPositionClass ?? 'object-center'} ${
+              clickToToggleVideo ? 'cursor-pointer' : 'pointer-events-none'
+            }`}
             autoPlay
             muted
             loop
             playsInline
             draggable={false}
+            onClick={handleVideoClick}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}
@@ -39,21 +64,23 @@ function ProjectMedia({ project, altOverride = null }) {
   );
 }
 
-/**
- * Carousel thumbnail: media + invisible click layer above the asset.
- * Drag logic lives on the parent viewport; do not call stopPropagation on pointerdown.
- */
 export function CarouselAssetCard({
   project,
   onOpen,
   suppressClickRef,
   interactive = true,
+  clickToToggleVideo = false,
 }) {
   return (
     <article
       className={`group relative shrink-0 self-end ${project.widthClass}`}
     >
-      <ProjectMedia project={project} altOverride={interactive ? null : ''} />
+      <ProjectMedia
+        project={project}
+        altOverride={interactive ? null : ''}
+        clickToToggleVideo={clickToToggleVideo}
+      />
+
       {interactive ? (
         <button
           type="button"
