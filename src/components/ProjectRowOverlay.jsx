@@ -10,7 +10,6 @@ function ProjectRowOverlay({
   credits = '',
   mediaItems = [],
   disableCarousel = false,
-  containMediaRail = false,
   className = '',
 }) {
   const mobileViewportRef = useRef(null);
@@ -426,7 +425,6 @@ function ProjectRowOverlay({
               setWidthRef,
               offsetRef.current + momentumRef.current.velocity * dt
             );
-
             momentumRef.current.velocity *= Math.pow(friction, dt * 60);
           } else {
             momentumRef.current.velocity = 0;
@@ -649,7 +647,7 @@ function ProjectRowOverlay({
         desktopViewport.removeEventListener('wheel', desktopHandlers.handleWheel);
       }
     };
-  }, [shouldLoopInfinitely, isDesktopViewport, baseItems.length]);
+  }, [mobileHandlers, desktopHandlers]);
 
   const saveImageDimensions = (src, img) => {
     if (!src || !img?.naturalWidth || !img?.naturalHeight) return;
@@ -676,8 +674,7 @@ function ProjectRowOverlay({
   const renderMediaItem = (item, index, prefix, carouselHeight, copyIndex = 0) => {
     const isVideo = item?.type === 'video';
     const isImage = item?.type === 'image';
-    const isPreviewVideo = item?.previewMode === true;
-    const shouldUsePreviewBehavior = isPreviewVideo;
+    const shouldUsePreviewBehavior = item?.previewMode === true;
     const hideBelowDesktop = item?.hideBelowDesktop === true;
 
     if (hideBelowDesktop && !isDesktopViewport) {
@@ -688,15 +685,23 @@ function ProjectRowOverlay({
 
     if (isImage && item?.src && imageDimensions[item.src]) {
       const { width, height } = imageDimensions[item.src];
-      const ratio = width / height;
-      itemWidth = carouselHeight * ratio;
+      itemWidth = carouselHeight * (width / height);
     }
 
     if (isVideo) {
       const aspectRatio = item?.aspectRatio ?? '16 / 9';
       const [w, h] = aspectRatio.split('/').map((v) => Number(v.trim()));
+
       if (w && h) {
         itemWidth = carouselHeight * (w / h);
+      }
+
+      if (!isDesktopViewport && item?.mobileWidth) {
+        itemWidth = item.mobileWidth;
+      }
+
+      if (isDesktopViewport && item?.desktopWidth) {
+        itemWidth = item.desktopWidth;
       }
     }
 
@@ -707,20 +712,20 @@ function ProjectRowOverlay({
 
     return (
       <div
-        key={`${prefix}-copy-${copyIndex}-${item?.src ?? 'placeholder'}-${index}`}
-        className={`flex-shrink-0 overflow-hidden text-sm text-neutral-500 ${
-          item.bgClass ?? 'bg-neutral-200'
-        }`}
-        style={{
-          height: '100%',
-          width: `${itemWidth}px`,
-          minWidth: `${itemWidth}px`,
-        }}
-      >
+  key={`${prefix}-copy-${copyIndex}-${item?.src ?? 'placeholder'}-${index}`}
+  className={`flex-shrink-0 overflow-hidden text-sm text-neutral-500 ${
+    item.bgClass ?? 'white'
+  }`}
+  style={{
+    height: '100%',
+    width: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
+    minWidth: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
+  }}
+>
         {item?.src ? (
           isVideo ? (
             <div
-              className="group relative h-full w-full"
+              className="group flex h-full w-full items-center justify-center"
               data-video-wrapper="true"
               onClick={(e) => {
                 if (suppressRef.current) return;
@@ -728,7 +733,9 @@ function ProjectRowOverlay({
                 handleVideoPrimaryClick(videoKey);
               }}
             >
-              <div className="media-item h-full w-full">
+              <div
+                className={`relative h-full w-full ${item.frameClass ?? ''} ${item.innerClass ?? ''}`}
+              >
                 <video
                   key={videoKey}
                   ref={(el) => {
@@ -754,7 +761,9 @@ function ProjectRowOverlay({
                   disablePictureInPicture
                   disableRemotePlayback
                   controls={false}
-                  className="pointer-events-none block h-full w-full object-cover"
+                  className={`pointer-events-none block h-full w-full ${
+                    item.fitClass ?? 'object-cover'
+                  } ${item.className ?? ''}`}
                   onLoadedMetadata={(e) => {
                     const video = e.currentTarget;
 
@@ -823,120 +832,120 @@ function ProjectRowOverlay({
                     updateVideoState(videoKey, { paused: true });
                   }}
                 />
-              </div>
 
-              {!shouldUsePreviewBehavior && (
-                <>
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                {!shouldUsePreviewBehavior && (
+                  <>
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
-                  <div className="pointer-events-none absolute inset-0 z-10 opacity-80 transition-opacity duration-200 group-hover:opacity-100">
-                    <div className="absolute bottom-0 left-0 right-0 px-3 pb-2">
-                      <div
-                        data-video-controls="true"
-                        className="pointer-events-auto flex items-center gap-3 text-white"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => handleVideoPrimaryClick(videoKey)}
-                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                          aria-label={
-                            videoStates[videoKey]?.paused === false
-                              ? 'Pause video'
-                              : 'Play video'
-                          }
+                    <div className="pointer-events-none absolute inset-0 z-10 opacity-80 transition-opacity duration-200 group-hover:opacity-100">
+                    <div className="absolute bottom-3 left-0 right-0 px-3">
+                        <div
+                          data-video-controls="true"
+                          className="pointer-events-auto flex items-center gap-3 text-white"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          {videoStates[videoKey]?.paused === false ? (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-                              <rect x="6" y="5" width="4" height="14" />
-                              <rect x="14" y="5" width="4" height="14" />
-                            </svg>
-                          ) : (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-                              <polygon points="8,5 19,12 8,19" />
-                            </svg>
-                          )}
-                        </button>
-
-                        <span className="min-w-[72px] text-[11px] leading-none text-white">
-                          {formatTime(videoStates[videoKey]?.currentTime || 0)} /{' '}
-                          {formatTime(videoStates[videoKey]?.duration || 0)}
-                        </span>
-
-                        <input
-                          type="range"
-                          min="0"
-                          max={videoStates[videoKey]?.duration || 0}
-                          step="0.1"
-                          value={videoStates[videoKey]?.currentTime || 0}
-                          onChange={(e) => handleScrub(videoKey, e.target.value)}
-                          onMouseDown={(e) => e.stopPropagation()}
-                          className="video-slider h-[3px] w-full cursor-pointer"
-                          aria-label="Video progress"
-                        />
-
-                        <button
-                          type="button"
-                          onClick={() => toggleMute(videoKey)}
-                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                          aria-label={
-                            videoStates[videoKey]?.muted
-                              ? 'Turn sound on'
-                              : 'Turn sound off'
-                          }
-                        >
-                          {videoStates[videoKey]?.muted ? (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
-                              <path d="M16 9l5 5" stroke="currentColor" strokeWidth="2" />
-                              <path d="M21 9l-5 5" stroke="currentColor" strokeWidth="2" />
-                            </svg>
-                          ) : (
-                            <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
-                              <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
-                              <path
-                                d="M16.5 9.5a4.5 4.5 0 0 1 0 5"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                              />
-                              <path
-                                d="M18.5 7a8 8 0 0 1 0 10"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                              />
-                            </svg>
-                          )}
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => toggleFullscreen(videoKey)}
-                          className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
-                          aria-label="Toggle fullscreen"
-                        >
-                          <svg
-                            viewBox="0 0 24 24"
-                            className="h-4 w-4"
-                            aria-hidden="true"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                          <button
+                            type="button"
+                            onClick={() => handleVideoPrimaryClick(videoKey)}
+                            className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                            aria-label={
+                              videoStates[videoKey]?.paused === false
+                                ? 'Pause video'
+                                : 'Play video'
+                            }
                           >
-                            <path d="M8 3H3v5" />
-                            <path d="M16 3h5v5" />
-                            <path d="M21 16v5h-5" />
-                            <path d="M8 21H3v-5" />
-                          </svg>
-                        </button>
+                            {videoStates[videoKey]?.paused === false ? (
+                              <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                                <rect x="6" y="5" width="4" height="14" />
+                                <rect x="14" y="5" width="4" height="14" />
+                              </svg>
+                            ) : (
+                              <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+                                <polygon points="8,5 19,12 8,19" />
+                              </svg>
+                            )}
+                          </button>
+
+                          <span className="min-w-[72px] text-[11px] leading-none text-white">
+                            {formatTime(videoStates[videoKey]?.currentTime || 0)} /{' '}
+                            {formatTime(videoStates[videoKey]?.duration || 0)}
+                          </span>
+
+                          <input
+                            type="range"
+                            min="0"
+                            max={videoStates[videoKey]?.duration || 0}
+                            step="0.1"
+                            value={videoStates[videoKey]?.currentTime || 0}
+                            onChange={(e) => handleScrub(videoKey, e.target.value)}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            className="video-slider h-[3px] w-full cursor-pointer"
+                            aria-label="Video progress"
+                          />
+
+                          <button
+                            type="button"
+                            onClick={() => toggleMute(videoKey)}
+                            className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                            aria-label={
+                              videoStates[videoKey]?.muted
+                                ? 'Turn sound on'
+                                : 'Turn sound off'
+                            }
+                          >
+                            {videoStates[videoKey]?.muted ? (
+                              <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
+                                <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
+                                <path d="M16 9l5 5" stroke="currentColor" strokeWidth="2" />
+                                <path d="M21 9l-5 5" stroke="currentColor" strokeWidth="2" />
+                              </svg>
+                            ) : (
+                              <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true" fill="none">
+                                <path d="M14 5.23v13.54L7.5 14H4V10h3.5L14 5.23z" fill="currentColor" />
+                                <path
+                                  d="M16.5 9.5a4.5 4.5 0 0 1 0 5"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                />
+                                <path
+                                  d="M18.5 7a8 8 0 0 1 0 10"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                />
+                              </svg>
+                            )}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => toggleFullscreen(videoKey)}
+                            className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
+                            aria-label="Toggle fullscreen"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="h-4 w-4"
+                              aria-hidden="true"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M8 3H3v5" />
+                              <path d="M16 3h5v5" />
+                              <path d="M21 16v5h-5" />
+                              <path d="M8 21H3v-5" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
             </div>
           ) : isImage ? (
             <div className={`h-full w-full ${item.innerClass ?? ''}`}>
@@ -947,7 +956,7 @@ function ProjectRowOverlay({
                 onLoad={(e) => saveImageDimensions(item.src, e.currentTarget)}
                 className={`pointer-events-none block h-full w-full ${
                   item.fitClass ?? 'object-cover object-top'
-                } ${item?.className ?? ''}`}
+                } ${item.className ?? ''}`}
               />
             </div>
           ) : null
@@ -987,7 +996,7 @@ function ProjectRowOverlay({
       className={`w-full pb-12 pt-6 min-[750px]:pb-32 min-[750px]:pt-7 min-[850px]:grid min-[850px]:grid-cols-[360px,minmax(0,1fr)] min-[850px]:items-stretch min-[850px]:gap-[64px] min-[850px]:pt-[28px] last:pb-8 min-[750px]:last:pb-0 ${className}`}
       aria-labelledby={projectId}
     >
-           <div className="min-w-0 min-[850px]:order-2 min-[850px]:pt-10 min-[1200px]:pt-6">
+      <div className="min-w-0 min-[850px]:order-2 min-[850px]:pt-10 min-[1200px]:pt-6">
         {!isDesktopViewport ? (
           <div
             className={
@@ -1046,7 +1055,7 @@ function ProjectRowOverlay({
                   : ''
               }`}
               style={{
-                height: '68vh',
+                height: '66vh',
                 touchAction: shouldLoopInfinitely ? 'pan-y' : 'auto',
                 overscrollBehaviorX: 'contain',
               }}
@@ -1064,7 +1073,7 @@ function ProjectRowOverlay({
             minHeight: isDesktopViewport ? '68vh' : undefined,
           }}
         >
-         <div className="mt-4 min-[750px]:mt-3 flex flex-col gap-3 min-[750px]:gap-[14px]">
+          <div className="mt-4 flex flex-col gap-3 min-[750px]:mt-3 min-[750px]:gap-[14px]">
             {title && (
               <h2
                 id={projectId}
@@ -1075,7 +1084,7 @@ function ProjectRowOverlay({
             )}
 
             {category && (
-              <p className="font-arial font-semibold text-[11px] leading-[1.35] tracking-[.1px] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.26]">
+              <p className="font-arial text-[11px] font-semibold leading-[1.35] tracking-[.1px] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.26]">
                 {category}
               </p>
             )}

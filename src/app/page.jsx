@@ -75,15 +75,19 @@ Jennifer Bonilla, Terumi Fletcher`,
     ],
     type: 'video',
     src: '/videos/katz_vertical_thumbnail.mp4',
-    fitClass: 'object-cover object-[50%_20%]',
-    heightClass: 'h-[46vh] min-h-[500px] min-[750px]:h-[62vh]',
+    fitClass: 'object-cover object-[50%_32%] min-[750px]:object-[50%_35%]',
+    heightClass: 'h-[46vh] min-h-[450px] min-[750px]:h-[62vh]',
     widthClass:
       'w-[78vw] min-[600px]:w-[58vw] min-[850px]:w-[36vw] min-[1200px]:w-[28vw]',
     mediaItems: [
       {
         type: 'video',
         src: '/videos/CP_Square_Katz_HERO_V3_260207_FINAL_CC_MIX_CAPTIONS.mp4',
+        fitClass: 'object-cover min-[750px]:object-cover min-[750px]:object-[50%_20%]',
+        frameClass:
+          'bg-white pl-0 pt-3 pb-3 pr-0 h-[100%] w-[%] mx-auto min-[750px]:bg-transparent min-[750px]:p-0 min-[750px]:h-full min-[750px]:w-full',
         aspectRatio: '16 / 9',
+        mobileWidth: '95vw',
         loop: true,
       },
       { type: 'image', src: '/images/TimesChange_01.png' },
@@ -308,6 +312,7 @@ export default function TestCarouselPage() {
   const rafRef = useRef(0);
   const lastTimeRef = useRef(0);
   const offsetRef = useRef(0);
+  const autoplayDelayRef = useRef(true);
   const loopWidthRef = useRef(0);
 
   const suppressClickRef = useRef(false);
@@ -374,6 +379,23 @@ export default function TestCarouselPage() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+  
+    if (window.innerWidth >= 850) {
+      autoplayDelayRef.current = false;
+      return;
+    }
+  
+    autoplayDelayRef.current = true;
+  
+    const timeout = window.setTimeout(() => {
+      autoplayDelayRef.current = false;
+    }, 800);
+  
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
     if (!trackRef.current) return;
 
     const speedPxPerSecond = 52;
@@ -393,7 +415,9 @@ export default function TestCarouselPage() {
           momentumRef.current.velocity *= Math.pow(friction, dt * 60);
         } else {
           momentumRef.current.velocity = 0;
-          applyOffset(offsetRef.current - speedPxPerSecond * dt);
+         if (!autoplayDelayRef.current) {
+  applyOffset(offsetRef.current - speedPxPerSecond * dt);
+}
         }
       }
 
@@ -539,11 +563,7 @@ export default function TestCarouselPage() {
 />
       </header>
   
-      <main
-        className={`flex w-full flex-1 ${
-          activeProject ? 'min-h-0 overflow-y-auto' : 'min-h-0 overflow-hidden'
-        }`}
-      >
+      <main className="flex w-full flex-1 min-h-0 overflow-hidden">
         {!activeProject && (
           <section
             ref={viewportRef}
