@@ -987,7 +987,7 @@ function ProjectRowOverlay({
       className={`w-full pb-12 pt-6 min-[750px]:pb-32 min-[750px]:pt-7 min-[850px]:grid min-[850px]:grid-cols-[360px,minmax(0,1fr)] min-[850px]:items-stretch min-[850px]:gap-[64px] min-[850px]:pt-[28px] last:pb-8 min-[750px]:last:pb-0 ${className}`}
       aria-labelledby={projectId}
     >
-           <div className="min-w-0 min-[850px]:order-2 min-[850px]:pt-10 min-[1200px]:pt-5">
+           <div className="min-w-0 min-[850px]:order-2 min-[850px]:pt-10 min-[1200px]:pt-6">
         {!isDesktopViewport ? (
           <div
             className={
@@ -1064,7 +1064,7 @@ function ProjectRowOverlay({
             minHeight: isDesktopViewport ? '68vh' : undefined,
           }}
         >
-          <div className="flex flex-col gap-3 min-[750px]:gap-[14px]">
+         <div className="mt-4 min-[750px]:mt-3 flex flex-col gap-3 min-[750px]:gap-[14px]">
             {title && (
               <h2
                 id={projectId}
