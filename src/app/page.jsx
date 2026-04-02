@@ -85,7 +85,7 @@ Jennifer Bonilla, Terumi Fletcher`,
         src: '/videos/CP_Square_Katz_HERO_V3_260207_FINAL_CC_MIX_CAPTIONS.mp4',
         fitClass: 'object-cover min-[750px]:object-cover min-[750px]:object-[50%_20%]',
         frameClass:
-          'bg-white pl-0 pt-3 pb-3 pr-0 h-[100%] w-[%] mx-auto min-[750px]:bg-transparent min-[750px]:p-0 min-[750px]:h-full min-[750px]:w-full',
+          'bg-transparent pl-0 pt-1 pb-1 pr-1 h-full w-[100%] mx-auto min-[750px]:bg-transparent min-[750px]:p-0 min-[750px]:h-full min-[750px]:w-full',
         aspectRatio: '16 / 9',
         mobileWidth: '95vw',
         loop: true,
