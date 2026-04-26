@@ -6,7 +6,7 @@ function Footer({ leftContent, rightContent, className = '' }) {
         aria-hidden="true"
       />
 
-      <div className="h-8 flex items-center justify-between px-8 min-[750px]:px-[51px]">
+<div className="h-8 flex items-center justify-between max-w-[1600px] mx-auto px-6">
         <p className="text-[10.753px] font-bold leading-[1.06] text-black tracking-[-0.1075px]">
           {leftContent}
         </p>

@@ -49,7 +49,7 @@ function PageLayout({
         )}
       </main>
 
-      <div className="w-full flex-shrink-0 pt-36">
+      <div className="w-full flex-shrink-0 pt-24">
         {footer}
       </div>
     </div>
