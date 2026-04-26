@@ -82,7 +82,7 @@ Jennifer Bonilla, Terumi Fletcher`,
     mediaItems: [
       {
         type: 'video',
-        src: '/videos/CP_Square_Katz_HERO_V3_260207_FINAL_CC_MIX_CAPTIONS.mp4',
+        src: '/videos/Katz_Compressed.mp4',
         fitClass: 'object-cover min-[750px]:object-cover min-[750px]:object-[50%_20%]',
         frameClass:
           'bg-transparent p-0 h-full w-full',
@@ -97,7 +97,7 @@ Jennifer Bonilla, Terumi Fletcher`,
       { type: 'image', src: '/images/TimesChange_03.png' },
       {
         type: 'video',
-        src: '/videos/Subway_Single_1.mp4',
+        src: '/videos/Subway_Single_Compressed.mp4',
         previewMode: true,
         loop: true,
       },
