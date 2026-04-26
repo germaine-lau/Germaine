@@ -37,9 +37,6 @@ function ProjectRowOverlay({
   const desktopLastTimeRef = useRef(0);
 
   const videoRefs = useRef({});
-  const pausedByCarouselRef = useRef(null);
-  const wheelResumeTimeoutRef = useRef(null);
-  const wheelDeltaAccumulatorRef = useRef(0);
 
   const [mobileHeight, setMobileHeight] = useState(280);
   const [desktopHeight, setDesktopHeight] = useState(491);
@@ -265,87 +262,6 @@ function ProjectRowOverlay({
 
     await togglePlayPause(videoKey);
   };
-
-  const pauseActiveVideosForCarouselIfMostlyOffscreen = () => {
-    Object.entries(videoRefs.current).forEach(([key, video]) => {
-      if (!video) return;
-  
-      const isRealVideo = video.dataset.previewVideo !== 'true';
-      if (!isRealVideo || video.paused) return;
-  
-      const rect = video.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-  
-      const visibleWidth =
-        Math.min(rect.right, viewportWidth) - Math.max(rect.left, 0);
-  
-      const visibilityRatio = visibleWidth / rect.width;
-  
-      // Pause only when more than 60% is offscreen
-      if (visibilityRatio > 0.4) return;
-  
-      pausedByCarouselRef.current = key;
-  
-      video.pause();
-  
-      updateVideoState(key, {
-        paused: true,
-        currentTime: video.currentTime || 0,
-        duration: video.duration || 0,
-        muted: video.muted,
-      });
-    });
-  };
-
-  const forceVideoRepaint = (video) => {
-    if (!video) return;
-  
-    video.style.transform = 'scale(1.0101) translateZ(0)';
-  
-    requestAnimationFrame(() => {
-      video.style.transform = 'scale(1.01) translateZ(0)';
-    });
-  };
-
-const resumePausedVideoIfVisible = async () => {
-  const key = pausedByCarouselRef.current;
-  if (!key) return;
-
-  const video = videoRefs.current[key];
-  if (!video) return;
-
-  const rect = video.getBoundingClientRect();
-  const viewportWidth = window.innerWidth;
-
-  const visibleWidth =
-    Math.min(rect.right, viewportWidth) - Math.max(rect.left, 0);
-
-  const visibilityRatio = visibleWidth / rect.width;
-
-  // only resume if mostly visible
-  if (visibilityRatio < 0.6) return;
-
-  try {
-    video.muted = false;
-    video.defaultMuted = false;
-    video.loop = false;
-    video.dataset.userActivated = 'true';
-
-    await video.play();
-    forceVideoRepaint(video);
-    pausedByCarouselRef.current = null;
-    
-    updateVideoState(key, {
-      paused: false,
-      muted: false,
-      hasInteracted: true,
-      currentTime: video.currentTime || 0,
-      duration: video.duration || 0,
-    });
-  } catch (err) {
-    console.error('resume failed', err);
-  }
-};
 
   useEffect(() => {
     imageItems.forEach((item) => {
@@ -636,23 +552,19 @@ const resumePausedVideoIfVisible = async () => {
       if (!viewport) return;
       if (!dragState.current.isPointerDown) return;
       if (dragState.current.pointerId !== e.pointerId) return;
-    
+
       const wasDragging = dragState.current.isDragging;
-    
+
       dragState.current.isPointerDown = false;
       dragState.current.isDragging = false;
       dragState.current.pointerId = null;
-    
+
       setDragging(false);
       viewport.releasePointerCapture?.(e.pointerId);
-    
+
       window.setTimeout(() => {
         suppressClickRef.current = false;
       }, wasDragging ? 120 : 0);
-    
-      window.setTimeout(() => {
-        resumePausedVideoIfVisible();
-      }, wasDragging ? 180 : 0);
     };
 
     const handleWheel = (e) => {
@@ -666,13 +578,6 @@ const resumePausedVideoIfVisible = async () => {
 
       if (primaryDelta === 0) return;
 
-      wheelDeltaAccumulatorRef.current += Math.abs(primaryDelta);
-
-      if (wheelDeltaAccumulatorRef.current > 140) {
-        pauseActiveVideosForCarouselIfMostlyOffscreen();
-        wheelDeltaAccumulatorRef.current = 0;
-      }
-
       e.preventDefault();
 
       applyTrackOffset(
@@ -684,12 +589,6 @@ const resumePausedVideoIfVisible = async () => {
 
       momentumRef.current.velocity = primaryDelta * -22;
       momentumRef.current.lastTime = performance.now();
-      window.clearTimeout(wheelResumeTimeoutRef.current);
-
-wheelResumeTimeoutRef.current = window.setTimeout(() => {
-  wheelDeltaAccumulatorRef.current = 0;
-  resumePausedVideoIfVisible();
-}, 250);
     };
 
     return {
@@ -813,16 +712,16 @@ wheelResumeTimeoutRef.current = window.setTimeout(() => {
 
     return (
       <div
-        key={`${prefix}-copy-${copyIndex}-${item?.src ?? 'placeholder'}-${index}`}
-        className={`flex-shrink-0 overflow-hidden text-sm text-neutral-500 ${
-          item.bgClass ?? 'white'
-        }`}
-        style={{
-          height: '100%',
-          width: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
-          minWidth: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
-        }}
-      >
+  key={`${prefix}-copy-${copyIndex}-${item?.src ?? 'placeholder'}-${index}`}
+  className={`flex-shrink-0 overflow-hidden text-sm text-neutral-500 ${
+    item.bgClass ?? 'white'
+  }`}
+  style={{
+    height: '100%',
+    width: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
+    minWidth: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
+  }}
+>
         {item?.src ? (
           isVideo ? (
             <div
@@ -834,12 +733,10 @@ wheelResumeTimeoutRef.current = window.setTimeout(() => {
                 handleVideoPrimaryClick(videoKey);
               }}
             >
-              <div
-                className={`relative h-full w-full overflow-hidden ${item.frameClass ?? ''} ${
-                  item.innerClass ?? ''
-                }`}
-                style={{ transform: 'translateZ(0)' }}
-              >
+<div
+  className={`relative h-full w-full overflow-hidden ${item.frameClass ?? ''} ${item.innerClass ?? ''}`}
+  style={{ transform: 'translateZ(0)' }}
+>
                 <video
                   key={videoKey}
                   ref={(el) => {
@@ -868,11 +765,10 @@ wheelResumeTimeoutRef.current = window.setTimeout(() => {
                   className={`pointer-events-none block h-full w-full ${
                     item.fitClass ?? 'object-cover'
                   } ${item.className ?? ''}`}
-                 style={{
-  transform: 'scale(1.01) translateZ(0)',
-  backfaceVisibility: 'hidden',
-  willChange: 'transform',
-}}
+                  style={{
+                    transform: 'scale(1.01)',
+                    backfaceVisibility: 'hidden',
+                  }}
                   onLoadedMetadata={(e) => {
                     const video = e.currentTarget;
 
@@ -944,10 +840,10 @@ wheelResumeTimeoutRef.current = window.setTimeout(() => {
 
                 {!shouldUsePreviewBehavior && (
                   <>
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
-                    <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                      <div className="absolute bottom-2 left-0 right-0 px-3">
+                   <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden opacity-80 transition-opacity duration-200 group-hover:opacity-100">
+                    <div className="absolute bottom-2 left-0 right-0 px-3">
                         <div
                           data-video-controls="true"
                           className="pointer-events-auto flex items-center gap-3 text-white"
@@ -955,10 +851,7 @@ wheelResumeTimeoutRef.current = window.setTimeout(() => {
                         >
                           <button
                             type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleVideoPrimaryClick(videoKey);
-                            }}
+                            onClick={() => handleVideoPrimaryClick(videoKey)}
                             className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
                             aria-label={
                               videoStates[videoKey]?.paused === false
@@ -990,22 +883,14 @@ wheelResumeTimeoutRef.current = window.setTimeout(() => {
                             step="0.1"
                             value={videoStates[videoKey]?.currentTime || 0}
                             onChange={(e) => handleScrub(videoKey, e.target.value)}
-                            onClick={(e) => e.stopPropagation()}
-                            onPointerDown={(e) => e.stopPropagation()}
-                            onPointerMove={(e) => e.stopPropagation()}
-                            onPointerUp={(e) => e.stopPropagation()}
                             onMouseDown={(e) => e.stopPropagation()}
-                            onTouchStart={(e) => e.stopPropagation()}
                             className="video-slider h-[3px] w-full cursor-pointer"
                             aria-label="Video progress"
                           />
 
                           <button
                             type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleMute(videoKey);
-                            }}
+                            onClick={() => toggleMute(videoKey)}
                             className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
                             aria-label={
                               videoStates[videoKey]?.muted
@@ -1040,10 +925,7 @@ wheelResumeTimeoutRef.current = window.setTimeout(() => {
 
                           <button
                             type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleFullscreen(videoKey);
-                            }}
+                            onClick={() => toggleFullscreen(videoKey)}
                             className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
                             aria-label="Toggle fullscreen"
                           >
