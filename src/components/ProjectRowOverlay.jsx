@@ -154,14 +154,31 @@ function ProjectRowOverlay({
   const togglePlayPause = async (id) => {
     const video = videoRefs.current[id];
     if (!video) return;
-
+  
     try {
       if (video.paused) {
+  
+        video.muted = false;
+        video.defaultMuted = false;
+        video.loop = false;
+        video.dataset.userActivated = 'true';
+  
         await video.play();
-        updateVideoState(id, { paused: false });
+  
+        updateVideoState(id, {
+          paused: false,
+          muted: false,
+          hasInteracted: true,
+        });
       } else {
         video.pause();
-        updateVideoState(id, { paused: true });
+  
+        updateVideoState(id, {
+          paused: true,
+          currentTime: video.currentTime || 0,
+          duration: video.duration || 0,
+          muted: video.muted,
+        });
       }
     } catch (error) {
       console.error('Video play/pause error:', error);
@@ -229,7 +246,7 @@ function ProjectRowOverlay({
     video.setAttribute('autoplay', '');
     video.setAttribute('muted', '');
   };
-
+  
   const handleVideoPrimaryClick = async (videoKey) => {
     const video = videoRefs.current[videoKey];
     if (!video) return;
@@ -244,7 +261,8 @@ function ProjectRowOverlay({
         video.defaultMuted = false;
         video.loop = false;
         video.dataset.userActivated = 'true';
-
+      
+        
         await video.play();
 
         updateVideoState(videoKey, {
@@ -262,6 +280,7 @@ function ProjectRowOverlay({
 
     await togglePlayPause(videoKey);
   };
+
 
   useEffect(() => {
     imageItems.forEach((item) => {
@@ -552,41 +571,42 @@ function ProjectRowOverlay({
       if (!viewport) return;
       if (!dragState.current.isPointerDown) return;
       if (dragState.current.pointerId !== e.pointerId) return;
-
+    
       const wasDragging = dragState.current.isDragging;
-
+    
       dragState.current.isPointerDown = false;
       dragState.current.isDragging = false;
       dragState.current.pointerId = null;
-
+    
       setDragging(false);
       viewport.releasePointerCapture?.(e.pointerId);
-
+    
       window.setTimeout(() => {
         suppressClickRef.current = false;
       }, wasDragging ? 120 : 0);
+    
     };
 
     const handleWheel = (e) => {
       if (!shouldLoopInfinitely) return;
-
+    
       const interactiveTarget = e.target.closest('input, [data-video-controls="true"]');
       if (interactiveTarget) return;
-
+    
       const primaryDelta =
         Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-
+    
       if (primaryDelta === 0) return;
-
+    
       e.preventDefault();
-
+    
       applyTrackOffset(
         trackRef,
         offsetRef,
         setWidthRef,
         offsetRef.current - primaryDelta
       );
-
+    
       momentumRef.current.velocity = primaryDelta * -22;
       momentumRef.current.lastTime = performance.now();
     };
@@ -675,6 +695,7 @@ function ProjectRowOverlay({
     const isVideo = item?.type === 'video';
     const isImage = item?.type === 'image';
     const shouldUsePreviewBehavior = item?.previewMode === true;
+    
     const hideBelowDesktop = item?.hideBelowDesktop === true;
 
     if (hideBelowDesktop && !isDesktopViewport) {
@@ -712,16 +733,16 @@ function ProjectRowOverlay({
 
     return (
       <div
-  key={`${prefix}-copy-${copyIndex}-${item?.src ?? 'placeholder'}-${index}`}
-  className={`flex-shrink-0 overflow-hidden text-sm text-neutral-500 ${
-    item.bgClass ?? 'white'
-  }`}
-  style={{
-    height: '100%',
-    width: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
-    minWidth: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
-  }}
->
+        key={`${prefix}-copy-${copyIndex}-${item?.src ?? 'placeholder'}-${index}`}
+        className={`flex-shrink-0 overflow-hidden text-sm text-neutral-500 ${
+          item.bgClass ?? 'white'
+        }`}
+        style={{
+          height: '100%',
+          width: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
+          minWidth: typeof itemWidth === 'number' ? `${itemWidth}px` : itemWidth,
+        }}
+      >
         {item?.src ? (
           isVideo ? (
             <div
@@ -733,10 +754,12 @@ function ProjectRowOverlay({
                 handleVideoPrimaryClick(videoKey);
               }}
             >
-<div
-  className={`relative h-full w-full overflow-hidden ${item.frameClass ?? ''} ${item.innerClass ?? ''}`}
-  style={{ transform: 'translateZ(0)' }}
->
+              <div
+                className={`relative h-full w-full overflow-hidden ${item.frameClass ?? ''} ${
+                  item.innerClass ?? ''
+                }`}
+                style={{ transform: 'translateZ(0)' }}
+              >
                 <video
                   key={videoKey}
                   ref={(el) => {
@@ -765,10 +788,11 @@ function ProjectRowOverlay({
                   className={`pointer-events-none block h-full w-full ${
                     item.fitClass ?? 'object-cover'
                   } ${item.className ?? ''}`}
-                  style={{
-                    transform: 'scale(1.01)',
-                    backfaceVisibility: 'hidden',
-                  }}
+                 style={{
+  transform: 'scale(1.01) translateZ(0)',
+  backfaceVisibility: 'hidden',
+  willChange: 'transform',
+}}
                   onLoadedMetadata={(e) => {
                     const video = e.currentTarget;
 
@@ -840,10 +864,10 @@ function ProjectRowOverlay({
 
                 {!shouldUsePreviewBehavior && (
                   <>
-                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[120px] bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
-                   <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden opacity-80 transition-opacity duration-200 group-hover:opacity-100">
-                    <div className="absolute bottom-2 left-0 right-0 px-3">
+                    <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <div className="absolute bottom-2 left-0 right-0 px-3">
                         <div
                           data-video-controls="true"
                           className="pointer-events-auto flex items-center gap-3 text-white"
@@ -851,7 +875,10 @@ function ProjectRowOverlay({
                         >
                           <button
                             type="button"
-                            onClick={() => handleVideoPrimaryClick(videoKey)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleVideoPrimaryClick(videoKey);
+                            }}
                             className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
                             aria-label={
                               videoStates[videoKey]?.paused === false
@@ -883,14 +910,22 @@ function ProjectRowOverlay({
                             step="0.1"
                             value={videoStates[videoKey]?.currentTime || 0}
                             onChange={(e) => handleScrub(videoKey, e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            onPointerMove={(e) => e.stopPropagation()}
+                            onPointerUp={(e) => e.stopPropagation()}
                             onMouseDown={(e) => e.stopPropagation()}
+                            onTouchStart={(e) => e.stopPropagation()}
                             className="video-slider h-[3px] w-full cursor-pointer"
                             aria-label="Video progress"
                           />
 
                           <button
                             type="button"
-                            onClick={() => toggleMute(videoKey)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleMute(videoKey);
+                            }}
                             className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
                             aria-label={
                               videoStates[videoKey]?.muted
@@ -925,7 +960,10 @@ function ProjectRowOverlay({
 
                           <button
                             type="button"
-                            onClick={() => toggleFullscreen(videoKey)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFullscreen(videoKey);
+                            }}
                             className="flex h-6 w-6 items-center justify-center text-white transition-opacity hover:opacity-70"
                             aria-label="Toggle fullscreen"
                           >

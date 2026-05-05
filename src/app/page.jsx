@@ -244,7 +244,7 @@ fitClass: 'object-cover object-top',
     id: 'internet',
     title: 'The Internet',
     category: 'Web / Interactive Design',
-    description: `A selection of digital and interactive work spanning social content and web design. This includes talent-led series like Running a Restaurant is No Joke with Eric Wareheim and Only the Good Stuff with Kelis.
+    description: `A selection of digital and interactive work spanning product launch videos, social content, and web design. This includes talent-led series like Running a Restaurant is No Joke with Eric Wareheim and Only the Good Stuff with Kelis.
 
     Additional work available upon request.`,
     credits: [`Creative Direction
@@ -262,12 +262,32 @@ heightClass: 'h-[24vh] min-h-[280px] min-[750px]:h-[42vh] min-[850px]:h-[50vh]',
 widthClass:
   'w-[64vw] min-[600px]:w-[50vw] min-[850px]:w-[28vw] min-[1200px]:w-[20vw]',
     mediaItems: [
+      {
+        type: 'video',
+        src: '/videos/Overview_02.mp4',
+        previewMode: true,
+        loop: true,
+        aspectRatio: '16 /9',
+      },
+    
       { type: 'image', src: '/images/Eric_02-2.png' },
-      { type: 'image', src: '/images/Social_Woon01.png' },
       { type: 'image', src: '/images/Social_Kiosk.png' },
-      { type: 'image', src: '/images/Social_Woon02.png' },
-      { type: 'image', src: '/images/Eric_03-2.png' },
       { type: 'image', src: '/images/Social_TheSportsBra.png' },
+  
+      
+
+        
+      {
+        type: 'video',
+        src: '/videos/productlaunch_03.mp4',
+        previewMode: true,
+        loop: true,
+        aspectRatio: '16 /9',
+      },
+ 
+    
+     
+      { type: 'image', src: '/images/Kelis_Mobile.png' },
       {
         type: 'video',
         src: '/videos/Kelis_Smaller.mp4',
@@ -275,7 +295,18 @@ widthClass:
         loop: true,
         aspectRatio: '36 / 29',
       },
-      { type: 'image', src: '/images/Kelis_Mobile.png' },
+      {
+        type: 'video',
+        src: '/videos/productlaunch_04.mp4',
+        previewMode: true,
+        loop: true,
+        aspectRatio: '16 /9',
+      }, 
+  
+  
+  
+
+  
     ],
     modal: {},
   },
