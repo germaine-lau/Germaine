@@ -269,7 +269,6 @@ widthClass:
         loop: true,
         aspectRatio: '16 /9',
       },
-      { type: 'image', src: '/images/Social_Woon01.png' },
       { type: 'image', src: '/images/Eric_02-2.png' },
       { type: 'image', src: '/images/Social_Kiosk.png' },
       { type: 'image', src: '/images/Social_TheSportsBra.png' },
