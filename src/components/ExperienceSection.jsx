@@ -9,7 +9,8 @@ function ExperienceSection({ title = 'Experience', items = [], className = '' })
       >
         {title}
       </h2>
-      <div className="grid grid-cols-1 lg:grid-cols-[auto_auto_auto] gap-y-6 lg:gap-y-0 gap-x-6 items-start">
+
+      <div className="grid grid-cols-1 lg:grid-cols-[max-content_max-content] gap-y-8 lg:gap-x-16 items-start">
         {items.map((item, index) => (
           <ExperienceItem
             key={index}

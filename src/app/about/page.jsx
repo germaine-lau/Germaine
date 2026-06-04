@@ -14,9 +14,14 @@ const DEFAULT_NAV_ITEMS = [
 
 const DEFAULT_EXPERIENCE = [
   {
+    title: 'OpenAI',
+    subtitle: 'Designer, Contract',
+    dates: 'June 2026 – Present',
+  },
+  {
     title: 'Square',
     subtitle: 'Senior Designer',
-    dates: 'August 2020 – March 2026',
+    dates: 'August 2020 – May 2026',
   },
   {
     title: 'SFMOMA',
@@ -32,9 +37,9 @@ const DEFAULT_EXPERIENCE = [
 
 const DEFAULT_INTRO = `I’m Germaine, a multidisciplinary designer based in San Francisco. I believe in elevating brands in ways that feel human, expressive, and a little unexpected—without losing what makes them recognizable.
 
-Over the last six years as a Senior Designer on the Square / Block creative team, I’ve worked across campaigns, product launches, web, motion, and video. My work spans both digital and physical spaces, from multi-city OOH to the pillows you sat on at an event. 
+Over the last six years as a Senior Designer on the Square / Block creative team, I’ve worked across campaigns, product launches, web, motion, and video. My work stretches across both digital and physical spaces, from multi-city OOH to the pillows you sat on at an event. 
 
-Here’s a peek into how I work: I believe creativity is a team effort (I’ll bounce an idea off you, you can do the same to me), my sharpest thinking usually starts with an afternoon of heads-down time, and I treat every project as an opportunity to show up and push the work further.
+Here’s a peek into how I work: I believe creativity is a team effort, my sharpest thinking usually starts with an afternoon of heads-down time, and I treat every project as an opportunity to show up and push the work further.
 
 I’m currently open for work. Reach out if you’d like to brainstorm an idea or speak about an opportunity. 
 
