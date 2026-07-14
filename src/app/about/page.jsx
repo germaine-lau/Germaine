@@ -21,7 +21,7 @@ const DEFAULT_EXPERIENCE = [
   {
     title: 'Square',
     subtitle: 'Senior Designer',
-    dates: 'August 2020 – May 2026',
+    dates: 'August 2020 – March 2026',
   },
   {
     title: 'SFMOMA',
