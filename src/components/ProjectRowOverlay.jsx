@@ -1127,13 +1127,13 @@ function ProjectRowOverlay({
             )}
 
             {category && (
-              <p className="font-arial text-[11px] font-semibold leading-[1.35] tracking-[.1px] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.26]">
+              <p className="font-arial text-[11px] font-semibold leading-[1.35] tracking-[.1px] text-black min-[750px]:text-[9px] min-[750px]:leading-[1.3]">
                 {category}
               </p>
             )}
 
             {description && (
-              <p className="max-w-[300px] whitespace-pre-line font-arial text-[13px] leading-[1.35] tracking-[0px] text-black min-[750px]:max-w-[240px] min-[750px]:text-[10px] min-[750px]:leading-[1.25]">
+              <p className="max-w-[300px] whitespace-pre-line font-arial text-[13px] leading-[1.35] tracking-[0px] text-black min-[750px]:max-w-[240px] min-[750px]:text-[10.25px] min-[750px]:leading-[1.3]">
                 {description}
               </p>
             )}
